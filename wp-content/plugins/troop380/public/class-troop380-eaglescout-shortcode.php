@@ -35,7 +35,7 @@ class Troop380_EagleScout_Shortcode {
     private static function get_eagle_scout_count() {
         global $wpdb;
 
-        $query = "SELECT COUNT(*) FROM wordpress.wp_troop380_eaglescout;";
+        $query = "SELECT COUNT(*) FROM wp_troop380_eaglescout;";
 
         $eagleScoutCount = $wpdb->get_var($query);
 
@@ -47,7 +47,7 @@ class Troop380_EagleScout_Shortcode {
         $output = "<p>";
         $first = true;
         
-		$query = "SELECT YEAR(date_earned) 'year', COUNT(*) 'qty' FROM wordpress.wp_troop380_eaglescout GROUP BY YEAR(date_earned) ORDER BY YEAR(date_earned);";
+		$query = "SELECT YEAR(date_earned) 'year', COUNT(*) 'qty' FROM wp_troop380_eaglescout GROUP BY YEAR(date_earned) ORDER BY YEAR(date_earned);";
 
 		$yearsWithEagleScouts = $wpdb->get_results($query);
         
@@ -70,7 +70,7 @@ class Troop380_EagleScout_Shortcode {
         global $wpdb;
         $output = "";
 
-        $query = "SELECT YEAR(date_earned) 'year', firstname, lastname, date_earned, date_earned_is_real FROM wordpress.wp_troop380_eaglescout ORDER BY date_earned, lastname, firstname;";
+        $query = "SELECT YEAR(date_earned) 'year', firstname, lastname, date_earned, date_earned_is_real FROM wp_troop380_eaglescout ORDER BY date_earned, lastname, firstname;";
 
         $eagleScouts = $wpdb->get_results($query);
 
