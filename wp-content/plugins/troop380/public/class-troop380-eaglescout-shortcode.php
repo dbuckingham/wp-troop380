@@ -51,7 +51,7 @@ class Troop380_EagleScout_Shortcode {
 
 		$yearsWithEagleScouts = $wpdb->get_results($query);
         
-		foreach($yearsWithEagleScouts as $yearWithEagleScouts){
+		foreach($yearsWithEagleScouts as $yearWithEagleScouts) {
 			if(!$first) {
 				$output .= " | ";
 			}
@@ -68,18 +68,18 @@ class Troop380_EagleScout_Shortcode {
 
     private static function build_list() {
         global $wpdb;
-        $output = "";
 
         $query = "SELECT YEAR(date_earned) 'year', firstname, lastname, date_earned, date_earned_is_real FROM wp_troop380_eaglescout ORDER BY date_earned, lastname, firstname;";
 
         $eagleScouts = $wpdb->get_results($query);
 
+        $output = "";
         $previousYear = "";
-        foreach($eagleScouts as $eagleScout)
-        {
-            if($eagleScout->year != $previousYear)
-            {
-                $output .= "<h2 id='$eagleScout->year'>$eagleScout->year</h2>";
+        for($i = 0; $i < count($eagleScouts); $i++) {
+            $eagleScout = $eagleScouts[$i];
+         
+            if($eagleScout->year != $previousYear) {
+                $output .= "<h2 id='$eagleScout->year' class='eagleScoutYear'>$eagleScout->year</h2>";
                 $previousYear = $eagleScout->year;
             }
 
