@@ -1,3 +1,5 @@
+secrets.txt
+
 ### Docker Compose ###
 *.env
 docker-compose-wordpress.env
