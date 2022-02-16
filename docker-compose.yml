@@ -17,6 +17,7 @@ services:
      image: wordpress:php7.4-apache
      volumes:
       - './wp-content/plugins:/var/www/html/wp-content/plugins'
+      - './wp-content/themes/scouttroop-1-kkCvPa:/var/www/html/wp-content/themes/scouttroop-1-kkCvPa'
      ports:
        - "8000:80"
      restart: always
