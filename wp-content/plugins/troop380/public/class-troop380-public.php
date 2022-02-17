@@ -118,21 +118,18 @@ class Troop380_Public {
 	 */
 	public function register_customposttypes() {
 
-		// register_post_type('troop380_eaglescout',
-		// 	array(
-		// 		'labels'      => array(
-		// 			'name'          => __('Eagle Scouts', 'textdomain'),
-		// 			'singular_name' => __('Eagle Scout', 'textdomain'),
-		// 		),
-		// 			// 'description' 	=> 'An Eagle Scout of Troop 380',
-		// 			'public'      	=> true,
-		// 			'has_archive'	=> true,
-		// 			'rewrite' 		=> array( 'slug' => 'eaglescouts' ),
-		// 			'menu_icon'		=> 'dashicons-groups'
-		// 	)
-		// );
-
 		Troop380_EagleScout_CustomPostType::register();
+
+	}
+
+	/**
+	 * Add meta boxes for the custom post types.
+	 * 
+	 * @since 	1.1.0
+	 */
+	public function add_metaboxes() {
+
+		Troop380_EagleScout_CustomPostType::metaboxes();
 
 	}
 }

@@ -19,13 +19,6 @@
 class Troop380_EagleScout_CustomPostType {
 
     /**
-	 * Render the shortcode when executed.
-	 *
-	 * @since    1.0.0
-	 */
-	// public static function render( $atts ) {
-
-    /**
      * Register the Eagle Scout custom post type.
      * 
      * @since    1.1.0
@@ -45,6 +38,24 @@ class Troop380_EagleScout_CustomPostType {
 					'menu_icon'		=> 'dashicons-admin-users'
 			)
 		);
+    }
+
+	/**
+     * Add the meta boxes for the Eagle Scout custom post type.
+     * 
+     * @since    1.1.0
+     */
+    public static function metaboxes()
+    {
+        // $screens = ['troop380_eaglescout'];
+		// foreach($screens as $screen)
+		// {
+		// 	add_meta_box(
+		// 		'troop380_eaglescout_details',
+		// 		'Eagle Scout Details',
+
+		// 	);
+		// }
     }
 
 }
