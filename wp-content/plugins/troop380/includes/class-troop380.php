@@ -126,6 +126,11 @@ class Troop380 {
 		 */
 		require_once plugin_dir_path( dirname(__FILE__ ) ) . 'public/class-troop380-eaglescout-shortcode.php';
 
+		/**
+		 * Load classes for custom post types.
+		 */
+		require_once plugin_dir_path( dirname(__FILE__) ) . 'public/class-troop380-eaglescout-customposttype.php';
+
 		$this->loader = new Troop380_Loader();
 	}
 
@@ -180,7 +185,8 @@ class Troop380 {
 		// $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		// $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
 
-		$this->loader->add_action('plugins_loaded', $plugin_public, 'add_shortcodes');
+		$this->loader->add_action('init', $plugin_public, 'register_customposttypes');
+		$this->loader->add_action('plugins_loaded',	$plugin_public, 'add_shortcodes');
 
 	}
 
