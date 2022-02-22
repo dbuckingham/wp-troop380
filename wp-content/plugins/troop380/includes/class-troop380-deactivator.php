@@ -3,6 +3,7 @@
 /**
  * Fired during plugin deactivation
  *
+ * @link       https://github.com/dbuckingham/wp-troop380
  * @since      1.0.0
  *
  * @package    troop380
@@ -21,6 +22,20 @@
  */
 class Troop380_Deactivator {
 
-    public static function deactivate() {
-    }
+	/**
+	 * Short Description. (use period)
+	 *
+	 * Long Description.
+	 *
+	 * @since    1.0.0
+	 */
+	public static function deactivate() {
+
+		/**
+		 * This only required if custom post type has rewrite!
+		 */
+		flush_rewrite_rules();
+
+	}
+
 }

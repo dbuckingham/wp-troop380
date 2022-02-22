@@ -3,6 +3,7 @@
 /**
  * Register all actions and filters for the plugin
  *
+ * @link       https://github.com/dbuckingham/wp-troop380
  * @since      1.0.0
  *
  * @package    troop380
