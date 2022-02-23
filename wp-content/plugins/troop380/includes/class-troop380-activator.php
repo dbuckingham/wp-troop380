@@ -66,6 +66,9 @@ class Troop380_Activator {
 		 * @link https://codex.wordpress.org/Function_Reference/flush_rewrite_rules
 		 */
 		flush_rewrite_rules();
+
+
+		// TODO - Create Eagle Scout Custom Post Types from database records.
 	}
 
 }

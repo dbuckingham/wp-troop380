@@ -8,9 +8,11 @@ A WP plugin of useful, scouting related features, built for Troop 380 of the Lin
 - [ ] Review CSS classes for Eagle Scout shortcode.
 - [ ] Build template for single Eagle Scout page.
 - [ ] Refactor plugin to support extended menus (see below).
+- [ ] Clean up commented code.
 - [ ] Document Eagle Scout administration.
 - [ ] Document Eagle Scout shortcode.
 - [ ] Document Eagle Scout custom post type.
+- [ ] Add uninstall logic to delete wp_troop380_eaglescout table from database, if it exists.
 - [ ] Manage Adults (users or custom post types?)
 - [ ] Manage Merit Badges and Counselors
 - [ ] Mange Patrols
