@@ -53,7 +53,8 @@ class Troop380_Eagle_Scout_Shortcode {
     private static function get_eagle_scouts_from_posts() {
         
         $args = array(
-            'post_type'  => 'eaglescout'
+            'post_type'  => 'eaglescout',
+            'nopaging'  => true
         );
         $query = new WP_Query( $args );
 
