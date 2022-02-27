@@ -111,7 +111,6 @@ class Troop380_Admin {
 
 		if ( array_key_exists( 'board_of_review_date', $_POST ) ) {
 			
-			// $board_of_review_date = date_parse($_POST['board_of_review_date']);
 			$board_of_review_date = strtotime($_POST['board_of_review_date']);
 
 			update_post_meta(
@@ -137,7 +136,6 @@ class Troop380_Admin {
 
 	}
 
-
 	/**
 	 * Create a meta box for our custom fields
 	 * 
@@ -145,14 +143,9 @@ class Troop380_Admin {
 	 */
 	public function rerender_meta_options() {
 
-		// $screens = ['eaglescout'];
-		// foreach($screens as $screen){
-	
-			add_meta_box( 'eaglescout-meta', __( 'Eagle Scout Details' ), array($this, "display_meta_options"), 'eaglescout', 'normal', 'default' );
-		// }
+		add_meta_box( 'eaglescout-meta', __( 'Eagle Scout Details' ), array($this, "display_meta_options"), 'eaglescout', 'normal', 'default' );
 
 	}
-
 
 	/**
 	 * Display meta box and custom fields
@@ -162,9 +155,7 @@ class Troop380_Admin {
 	public function display_meta_options() {
 
 		global $post;
-		// $custom = get_post_custom($post->ID);
 
-		// https://www.designbyhn.se/adding-a-datepicker-to-a-wordpress-metabox/
 		// Enqueue Datepicker + jQuery UI CSS
 		wp_enqueue_script( 'jquery-ui-datepicker' );
 		wp_enqueue_style( 'jquery-ui-style', '//code.jquery.com/ui/1.13.1/themes/smoothness/jquery-ui.css', true);
@@ -216,7 +207,6 @@ class Troop380_Admin {
 		return $columns;
 
 	}
-
 
 	/**
 	 * Populate new columns in customers list in admin area

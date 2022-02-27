@@ -108,21 +108,6 @@ class Troop380_Public {
 	 */
 	public function eaglescouts_shortcode( $atts ) {
 
-		// TODO
-
-		// $args = shortcode_atts(
-		// 	array(
-		// 		'arg1'   => 'arg1',
-		// 		'arg2'   => 'arg2',
-		// 	),
-		// 	$atts
-		// );
-	
-		// // code...
-	
-		// $var = ( strtolower( $args['arg1']) != "" ) ? strtolower( $args['arg1'] ) : 'default';
-		// return $var;
-
 		require_once plugin_dir_path( __FILE__ ) . 'class-troop380-eagle-scout-shortcode.php';
 	
 		Troop380_Eagle_Scout_Shortcode::run($atts);

@@ -20,7 +20,6 @@ class Troop380_Eagle_Scout_Shortcode {
 
     public static function run( $atts ) {
 
-        // https://wpshout.com/using-wp_query-objects-without-loop/
         require_once plugin_dir_path( __FILE__ ) . 'class-troop380-eagle-scout.php';
 
         $eagle_scouts = self::get_eagle_scouts_grouped_by_year();

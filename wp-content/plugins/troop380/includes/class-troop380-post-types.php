@@ -8,6 +8,8 @@
  *
  * @package    troop380
  * @subpackage troop380/includes
+ * 
+ * @link https://github.com/JoeSz/WordPress-Plugin-Boilerplate-Tutorial/blob/master/plugin-name/tutorials/custom_post_types.php
  */
 class Troop380_Post_Types {
 
