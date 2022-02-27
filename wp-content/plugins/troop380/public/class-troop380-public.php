@@ -3,6 +3,7 @@
 /**
  * The public-facing functionality of the plugin.
  *
+ * @link       https://github.com/dbuckingham/wp-troop380
  * @since      1.0.0
  *
  * @package    troop380
@@ -44,7 +45,7 @@ class Troop380_Public {
 	 *
 	 * @since    1.0.0
 	 * @param      string    $plugin_name       The name of the plugin.
-	 * @param      string    $version    		The version of this plugin.
+	 * @param      string    $version    The version of this plugin.
 	 */
 	public function __construct( $plugin_name, $version ) {
 
@@ -72,7 +73,7 @@ class Troop380_Public {
 		 * class.
 		 */
 
-		// wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/plugin-name-public.css', array(), $this->version, 'all' );
+		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/troop380-public.css', array(), $this->version, 'all' );
 
 	}
 
@@ -95,19 +96,22 @@ class Troop380_Public {
 		 * class.
 		 */
 
-		// wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/plugin-name-public.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/troop380-public.js', array( 'jquery' ), $this->version, false );
 
 	}
 
 
 	/**
-	 * Register shortcodes.
-	 * 
-	 * @since 	1.0.0
+	 * Define the [eaglescout] shortcode.
+	 *
+	 * @since    1.0.0
 	 */
-	public function add_shortcodes() {
+	public function eaglescouts_shortcode( $atts ) {
 
-		add_shortcode('eaglescout', array('Troop380_EagleScout_Shortcode', 'render'));
-
+		require_once plugin_dir_path( __FILE__ ) . 'class-troop380-eagle-scout-shortcode.php';
+	
+		Troop380_Eagle_Scout_Shortcode::run($atts);
+	
 	}
+
 }

@@ -1,0 +1,65 @@
+/*
+This stylesheet is for the Google Calendar Events Plugin
+It is no longer used in the current version of the plugin.
+It remains here for backwards compatibility.
+http://www.DOMAINNA.ME/wp-content/themes/scouttroop/googlecalendarevents.css
+*/
+ul.gce-list, ul.gce-list ul {
+	list-style-type:none !important;
+	margin-left:0 !important;
+	padding-left:0 !important;
+}
+
+ul.gce-list li ul li div:nth-child(5), ul.gce-list li ul li div:nth-child(6){
+ 	display:none !important;
+}
+
+ul.gce-list li div:nth-child(4) {
+	margin-bottom:20px;;
+}
+
+div.gce-list-title {
+	margin-top:5px;
+	color: #BC2332;
+	text-decoration: underline;
+	margin-bottom: 4px;
+}
+
+
+div.gce-list-event.gce-tooltip-event {
+	font-weight:bold;
+	background-color: #fff !important;
+}
+
+
+/* for Google Calender Events Plugin */
+ul.gce-list, ul.gce-list ul {
+	list-style-type:none !important;
+	margin-left:0 !important;
+	padding-left:0 !important;
+}
+
+ul.gce-list li ul li div:nth-child(5), ul.gce-list li ul li div:nth-child(6){
+ 	display:none !important;
+}
+
+ul.gce-list li div:nth-child(4) {
+	margin-bottom:20px;;
+}
+
+div.gce-list-title {
+	margin-top:5px;
+	color: #BC2332;
+	text-decoration: underline;
+	margin-bottom: 4px;
+}
+
+
+div.gce-list-event.gce-tooltip-event {
+	font-weight:bold;
+	background-color: #fff !important;
+	padding:0;
+}
+.gce-list-grouped .gce-feed {
+margin-left: 0;
+}
