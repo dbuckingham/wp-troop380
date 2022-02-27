@@ -24,10 +24,11 @@ class Troop380_Eagle_Scout_Shortcode {
 
         $eagle_scouts = self::get_eagle_scouts_grouped_by_year();
 
-        self::display_header( $eagle_scouts );
+        $output = self::display_header( $eagle_scouts );
 
-        self::display_list( $eagle_scouts );
+        $output = $output . self::display_list( $eagle_scouts );
 
+        return $output;
     }
 
     private static function get_eagle_scouts_grouped_by_year() {
@@ -75,35 +76,39 @@ class Troop380_Eagle_Scout_Shortcode {
 
         $first = true;
 
-        echo "<p>";
+        $output = "<p>";
 
         foreach($eagle_scouts_by_year as $year => $eagle_scouts_in_year) {
             if(!$first) {
-                echo " | ";
+                $output .= " | ";
             }
 
-            echo "<a href='#" . $year . "'>" . $year . "</a> (" . count($eagle_scouts_in_year) . ")";
+            $output .= "<a href='#" . $year . "'>" . $year . "</a> (" . count($eagle_scouts_in_year) . ")";
 
             $first = false;
         }
 
-        echo "</p>";
+        $output .= "</p>";
 
+        return $output;
     }
 
     private static function display_list( $eagle_scouts_by_year ) {
 
+        $output = "";
+
         foreach( $eagle_scouts_by_year as $year => $eagle_scouts_in_year ) {
-            echo "<h2 id=" . $year . " class='eagleScoutYear'>" . $year . "</h2>";
+            $output .= "<h2 id=" . $year . " class='eagleScoutYear'>" . $year . "</h2>";
 
             foreach( $eagle_scouts_in_year as $eagle_scout ) {
-                echo "<div><a href='" . $eagle_scout->permalink . "'>" . $eagle_scout->name . "</a>" . ( 
+                $output .= "<div><a href='" . $eagle_scout->permalink . "'>" . $eagle_scout->name . "</a>" . ( 
                     $eagle_scout->board_of_review_date_is_real ? 
                     " (" . $eagle_scout->board_of_review_date . ")" : 
                     "" ) . "</div>";
             }
         }
 
+        return $output;
     }
 
 }

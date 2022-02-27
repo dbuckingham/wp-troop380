@@ -110,7 +110,7 @@ class Troop380_Public {
 
 		require_once plugin_dir_path( __FILE__ ) . 'class-troop380-eagle-scout-shortcode.php';
 	
-		Troop380_Eagle_Scout_Shortcode::run($atts);
+		return Troop380_Eagle_Scout_Shortcode::run($atts);
 	
 	}
 
