@@ -198,13 +198,14 @@ class Troop380_Admin {
 	 */
 	public function manage_eaglescout_posts_columns( $columns ) {
 
-		$inserted = [
-			'year_earned' => __('Year Earned', 'textdomain'), 
-			'board_of_review' => __('Board of Review', 'textdomain')
-		];
-		array_splice($columns, 2, 0, $inserted);
-	
-		return $columns;
+		$custom_columns = array(
+			'title' => 'Title',
+			'year_earned' => 'Year Earned',
+			'board_of_review' => 'Board of Review',
+			'date' => 'Date'
+		);
+
+		return $custom_columns;
 
 	}
 
@@ -215,20 +216,29 @@ class Troop380_Admin {
 	 */
 	public function manage_eaglescout_posts_custom_column( $column, $post_id ) {
 
+		$output = "";
+
 		// Populate column form meta
 		switch ( $column ) {
-			// case "year_earned":
-			case '0':
+			case "year_earned":
 				$year_earned = get_post_meta($post_id, 'year_earned', true);
-            	echo '<span>'; _e($year_earned, 'textdomain'); '</span>';
+            	$output .= '<span>'; 
+				$output .= $year_earned;
+				$output .= '</span>';
+
+				echo $output;
             	break;
 				
-			// case "board_of_review_date":
-			case '1':
+			case "board_of_review":
 				$board_of_review_date = get_post_meta($post_id, 'board_of_review_date', true);	
 				$board_of_review_date_is_real = (get_post_meta($post_id, 'board_of_review_date_is_real', true) == 'on');
 
-				echo '<span'; echo ($board_of_review_date_is_real) ? '>' : ' style="font-style: italic;">'; _e($board_of_review_date, 'textdomain'); echo '</span>';
+				$output .= '<span'; 
+				$output .= ($board_of_review_date_is_real) ? '>' : ' style="font-style: italic;">'; 
+				$output .= $board_of_review_date;
+				$output .= '</span>';
+
+				echo $output;
 				break;
 		}
 
