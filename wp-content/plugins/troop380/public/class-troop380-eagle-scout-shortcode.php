@@ -18,11 +18,19 @@
  */
 class Troop380_Eagle_Scout_Shortcode {
 
-    public static function run( $atts ) {
+    public static function run( $atts = [] ) {
 
         require_once plugin_dir_path( __FILE__ ) . 'class-troop380-eagle-scout.php';
 
-        $eagle_scouts = self::get_eagle_scouts_grouped_by_year();
+        $atts = array_change_key_case( (array)$atts, CASE_LOWER );
+
+        $eaglescout_atts = shortcode_atts(
+            array(
+                "order" => "desc"
+            ), $atts
+        );
+
+        $eagle_scouts = self::get_eagle_scouts_grouped_by_year( $eaglescout_atts["order"] );
 
         $output = self::display_header( $eagle_scouts );
 
@@ -31,8 +39,8 @@ class Troop380_Eagle_Scout_Shortcode {
         return $output;
     }
 
-    private static function get_eagle_scouts_grouped_by_year() {
-        $eagle_scouts = self::get_eagle_scouts_from_posts();
+    private static function get_eagle_scouts_grouped_by_year($order = "asc") {
+        $eagle_scouts = self::get_eagle_scouts_from_posts($order);
 
         $grouped_by_year = array();
         foreach($eagle_scouts as $eagle_scout)
@@ -50,11 +58,15 @@ class Troop380_Eagle_Scout_Shortcode {
          return $grouped_by_year;
     }
 
-    private static function get_eagle_scouts_from_posts() {
+    private static function get_eagle_scouts_from_posts( $order ) {
         
         $args = array(
-            'post_type'  => 'eaglescout',
-            'nopaging'  => true
+            "post_type"  => "eaglescout",
+            "nopaging"  => true,
+            "meta_key" => "board_of_review_date",
+            "meta_type" => "DATETIME",
+            "orderby" => "meta_value",
+            "order" => $order
         );
         $query = new WP_Query( $args );
 
@@ -66,7 +78,7 @@ class Troop380_Eagle_Scout_Shortcode {
             array_push($eagle_scouts, $eagle_scout);
         }
 
-        usort($eagle_scouts, 'Troop380_Eagle_Scout::eagle_scout_sort_by_board_of_review_date_asc' );
+        // usort($eagle_scouts, 'Troop380_Eagle_Scout::eagle_scout_sort_by_board_of_review_date_asc' );
 
         return $eagle_scouts;
 
