@@ -183,7 +183,7 @@ class Troop380_Admin {
 				<td>
 					<input type="checkbox" name="board_of_review_date_is_real" id="board_of_review_date_is_real" <?php echo $board_of_review_date_is_real ? 'checked' : ''; ?> />
 						Verified Board of Review Date<br />
-						<span style="font-style: italic; margin-left: 21px;">The Board of Review date is used to group Eagle Scouts by year, and sort them by the date which they earned the Eagle Rank.  If the actual Board of Review Date is not known, specify a date during the year it was earned, and leave the "Verified Board of Review Date" unchecked.</span>
+						<span style="font-style: italic;">The Board of Review date is used to group Eagle Scouts by year, and sort them by the date which they earned the Eagle Rank.  If the actual Board of Review Date is not known, specify a date during the year it was earned, and leave the "Verified Board of Review Date" unchecked.</span>
 				</td>
 			</tr>
 		</table>
@@ -245,6 +245,7 @@ class Troop380_Admin {
 	}
 
 	/**
+	 * Used to format the Board of Review Date meta value for display.
 	 * 
 	 * @since	1.1.2
 	 */
@@ -257,6 +258,7 @@ class Troop380_Admin {
 	}
 
 	/**
+	 * Define the sortable columns for eaglescout post types.
 	 * 
 	 * @since	1.1.2
 	 */
@@ -269,6 +271,7 @@ class Troop380_Admin {
 	}
 
 	/**
+	 * Modifies a WP_Query object to sort by meta-values.
 	 * 
 	 * @since	1.1.2
 	 */
@@ -291,6 +294,7 @@ class Troop380_Admin {
 	}
 
 	/**
+	 * Modifies a WP_Query object to sort eaglescout post types by Board of Review Date by default.
 	 * 
 	 * @since	1.1.2
 	 */
