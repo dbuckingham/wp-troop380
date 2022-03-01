@@ -116,13 +116,13 @@ class Troop380_Admin {
 			update_post_meta(
 				$post_id,
 				'board_of_review_date',
-				date("m/d/Y", $board_of_review_date) // $_POST['board_of_review_date']
+				date("Ymd", $board_of_review_date)
 			);
 	
 			update_post_meta(
 				$post_id,
 				'year_earned',
-				date("Y", $board_of_review_date) // $board_of_review_date['year']
+				date("Y", $board_of_review_date)
 			);
 		}
 	
@@ -161,8 +161,8 @@ class Troop380_Admin {
 		wp_enqueue_style( 'jquery-ui-style', '//code.jquery.com/ui/1.13.1/themes/smoothness/jquery-ui.css', true);
 
 		// Retrieve current date for the Eagle Scout
-		$board_of_review_date = get_post_meta( $post->ID, 'board_of_review_date', true ); // $custom["board_of_review_date"][0];
-		$board_of_review_date_is_real =  get_post_meta( $post->ID, 'board_of_review_date_is_real', true ); // $custom["board_of_review_date_is_real"][0];
+		$board_of_review_date = $this::format_board_of_review_date( get_post_meta( $post->ID, 'board_of_review_date', true ) );
+		$board_of_review_date_is_real =  get_post_meta( $post->ID, 'board_of_review_date_is_real', true );
 		?>
 
 		<script>
@@ -230,7 +230,7 @@ class Troop380_Admin {
             	break;
 				
 			case "board_of_review":
-				$board_of_review_date = get_post_meta($post_id, 'board_of_review_date', true);	
+				$board_of_review_date = $this::format_board_of_review_date( get_post_meta($post_id, 'board_of_review_date', true) );
 				$board_of_review_date_is_real = (get_post_meta($post_id, 'board_of_review_date_is_real', true) == 'on');
 
 				$output .= '<span'; 
@@ -242,5 +242,51 @@ class Troop380_Admin {
 				break;
 		}
 
+	}
+
+	/**
+	 * 
+	 * @since	1.1.2
+	 */
+	private function format_board_of_review_date( $board_of_review_date ) {
+		if( $board_of_review_date == "" ) {
+			return date( "m/d/Y" );
+		}
+
+		return date( "m/d/Y", strtotime( $board_of_review_date ) );
+	}
+
+	/**
+	 * 
+	 * @since	1.1.2
+	 */
+	public function set_eaglescout_sortable_columns( $columns ) {
+
+		$columns['year_earned'] = 'year_earned';
+		$columns['board_of_review'] = 'board_of_review';
+
+		return $columns;
+	}
+
+	/**
+	 * 
+	 * @since	1.1.2
+	 */
+	public function eaglescout_custom_orderby( $query ) {
+		if( ! is_admin() )
+			return;
+
+		$orderby = $query->get( 'orderby' );
+
+		if( 'year_earned' == $orderby ) {
+			$query->set('meta_key', 'year_earned');
+			$query->set('orderby', 'meta_value_num');
+		}
+
+		if( 'board_of_review' == $orderby ) {
+			$query->set('meta_key', 'board_of_review_date');
+			$query->set('meta_type', 'DATETIME');
+			$query->set('orderby', 'meta_value');
+		}
 	}
 }
