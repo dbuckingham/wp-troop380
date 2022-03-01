@@ -186,10 +186,18 @@ class Troop380 {
 		 * @link https://wordpress.stackexchange.com/questions/253640/adding-custom-columns-to-custom-post-types/253644#253644
 		 */
 		$this->loader->add_filter( 'manage_eaglescout_posts_columns', $plugin_admin, 'manage_eaglescout_posts_columns' );
+		
+		$this->loader->add_filter('manage_edit-eaglescout_sortable_columns', $plugin_admin, 'set_eaglescout_sortable_columns');
+
+		$this->loader->add_action('pre_get_posts', $plugin_admin, 'eaglescout_default_custom_orderby', 9, 2);
+		$this->loader->add_action('pre_get_posts', $plugin_admin, 'eaglescout_custom_orderby', 10, 2);
+
 		$this->loader->add_action( 'manage_eaglescout_posts_custom_column', $plugin_admin, 'manage_eaglescout_posts_custom_column', 10, 2 );
 
 		// TODO - review the admin_head action.
 		// $this->loader->add_action( 'admin_head', $plugin_admin, 'add_style_to_admin_head' );
+
+
 
 	}
 
