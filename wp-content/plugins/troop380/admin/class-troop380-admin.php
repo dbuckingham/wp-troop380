@@ -245,6 +245,7 @@ class Troop380_Admin {
 	}
 
 	/**
+	 * Used to format the Board of Review Date meta value for display.
 	 * 
 	 * @since	1.1.2
 	 */
@@ -257,6 +258,7 @@ class Troop380_Admin {
 	}
 
 	/**
+	 * Define the sortable columns for eaglescout post types.
 	 * 
 	 * @since	1.1.2
 	 */
@@ -269,6 +271,7 @@ class Troop380_Admin {
 	}
 
 	/**
+	 * Modifies a WP_Query object to sort by meta-values.
 	 * 
 	 * @since	1.1.2
 	 */
@@ -291,6 +294,7 @@ class Troop380_Admin {
 	}
 
 	/**
+	 * Modifies a WP_Query object to sort eaglescout post types by Board of Review Date by default.
 	 * 
 	 * @since	1.1.2
 	 */
