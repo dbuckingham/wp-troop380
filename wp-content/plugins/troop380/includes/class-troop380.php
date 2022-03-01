@@ -189,7 +189,8 @@ class Troop380 {
 		
 		$this->loader->add_filter('manage_edit-eaglescout_sortable_columns', $plugin_admin, 'set_eaglescout_sortable_columns');
 
-		$this->loader->add_action('pre_get_posts', $plugin_admin, 'eaglescout_custom_orderby');
+		$this->loader->add_action('pre_get_posts', $plugin_admin, 'eaglescout_default_custom_orderby', 9, 2);
+		$this->loader->add_action('pre_get_posts', $plugin_admin, 'eaglescout_custom_orderby', 10, 2);
 
 		$this->loader->add_action( 'manage_eaglescout_posts_custom_column', $plugin_admin, 'manage_eaglescout_posts_custom_column', 10, 2 );
 

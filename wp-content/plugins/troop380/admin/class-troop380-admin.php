@@ -289,4 +289,22 @@ class Troop380_Admin {
 			$query->set('orderby', 'meta_value');
 		}
 	}
+
+	/**
+	 * 
+	 * @since	1.1.2
+	 */
+	public function eaglescout_default_custom_orderby( $query )	{
+		if( $query->get('post_type') == 'eaglescout' ){
+			
+			if( $query->get('orderby') == '' ) {
+				$query->set('meta_key', 'board_of_review_date');
+				$query->set('meta_type', 'DATETIME');
+				$query->set('orderby', 'meta_value');
+			}
+	
+			if( $query->get('order') == '' )
+				$query->set('order','desc');
+		}
+	}
 }
