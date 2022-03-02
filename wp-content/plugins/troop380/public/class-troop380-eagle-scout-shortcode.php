@@ -78,8 +78,6 @@ class Troop380_Eagle_Scout_Shortcode {
             array_push($eagle_scouts, $eagle_scout);
         }
 
-        // usort($eagle_scouts, 'Troop380_Eagle_Scout::eagle_scout_sort_by_board_of_review_date_asc' );
-
         return $eagle_scouts;
 
     }

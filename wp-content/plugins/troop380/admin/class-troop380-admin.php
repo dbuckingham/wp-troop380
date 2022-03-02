@@ -49,6 +49,8 @@ class Troop380_Admin {
 	 */
 	public function __construct( $plugin_name, $version ) {
 
+		require_once plugin_dir_path( __FILE__ ) . '../includes/class-troop380-helpers.php';
+		
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 
@@ -161,7 +163,7 @@ class Troop380_Admin {
 		wp_enqueue_style( 'jquery-ui-style', '//code.jquery.com/ui/1.13.1/themes/smoothness/jquery-ui.css', true);
 
 		// Retrieve current date for the Eagle Scout
-		$board_of_review_date = $this::format_board_of_review_date( get_post_meta( $post->ID, 'board_of_review_date', true ) );
+		$board_of_review_date = Troop380_Helpers::format_board_of_review_date( get_post_meta( $post->ID, 'board_of_review_date', true ) );
 		$board_of_review_date_is_real =  get_post_meta( $post->ID, 'board_of_review_date_is_real', true );
 		?>
 
@@ -230,7 +232,7 @@ class Troop380_Admin {
             	break;
 				
 			case "board_of_review":
-				$board_of_review_date = $this::format_board_of_review_date( get_post_meta($post_id, 'board_of_review_date', true) );
+				$board_of_review_date = Troop380_Helpers::format_board_of_review_date( get_post_meta($post_id, 'board_of_review_date', true) );
 				$board_of_review_date_is_real = (get_post_meta($post_id, 'board_of_review_date_is_real', true) == 'on');
 
 				$output .= '<span'; 
@@ -242,19 +244,6 @@ class Troop380_Admin {
 				break;
 		}
 
-	}
-
-	/**
-	 * Used to format the Board of Review Date meta value for display.
-	 * 
-	 * @since	1.1.2
-	 */
-	private function format_board_of_review_date( $board_of_review_date ) {
-		if( $board_of_review_date == "" ) {
-			return date( "m/d/Y" );
-		}
-
-		return date( "m/d/Y", strtotime( $board_of_review_date ) );
 	}
 
 	/**
