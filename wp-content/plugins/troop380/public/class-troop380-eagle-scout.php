@@ -18,6 +18,8 @@
  */
 class Troop380_Eagle_Scout {
 
+    
+
     public $name;
     public $board_of_review_date;
     public $board_of_review_date_is_real;
@@ -36,8 +38,14 @@ class Troop380_Eagle_Scout {
     }
 
     function __construct( $post ) {
+
+        require_once plugin_dir_path( __FILE__ ) . '../includes/class-troop380-helpers.php';
+    
         $this->name = $post->post_title;
-        $this->board_of_review_date = get_post_meta( $post->ID, 'board_of_review_date', true );
+
+        $board_of_review_date = get_post_meta( $post->ID, 'board_of_review_date', true );
+        $this->board_of_review_date = Troop380_Helpers::format_board_of_review_date( $board_of_review_date );
+
         $this->year_earned = get_post_meta( $post->ID, 'year_earned', true );
 
         $is_board_of_review_real = get_post_meta( $post->ID, 'board_of_review_date_is_real', true );
@@ -45,5 +53,7 @@ class Troop380_Eagle_Scout {
 
         $this->permalink = get_post_permalink($post->ID);
     }
+
+    
 
 }
