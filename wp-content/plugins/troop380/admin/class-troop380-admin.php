@@ -219,6 +219,7 @@ class Troop380_Admin {
 			'title' => 'Title',
 			'year_earned' => 'Year Earned',
 			'board_of_review' => 'Board of Review',
+			'scoutmaster' => 'Scoutmaster',
 			'date' => 'Date'
 		);
 
@@ -253,6 +254,15 @@ class Troop380_Admin {
 				$output .= '<span'; 
 				$output .= ($board_of_review_date_is_real) ? '>' : ' style="font-style: italic;">'; 
 				$output .= $board_of_review_date;
+				$output .= '</span>';
+
+				echo $output;
+				break;
+
+			case 'scoutmaster':
+				$scoutmaster = get_post_meta( $post_id, 'scoutmaster', true );
+				$output .= '<span>';
+				$output .= $scoutmaster;
 				$output .= '</span>';
 
 				echo $output;
