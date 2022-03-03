@@ -136,6 +136,14 @@ class Troop380_Admin {
 			);
 		}
 
+		if ( array_key_exists( 'scoutmaster', $_POST ) ) {
+			update_post_meta(
+				$post_id,
+				'scoutmaster',
+				$_POST['scoutmaster']
+			);
+		}
+
 	}
 
 	/**
@@ -162,9 +170,12 @@ class Troop380_Admin {
 		wp_enqueue_script( 'jquery-ui-datepicker' );
 		wp_enqueue_style( 'jquery-ui-style', '//code.jquery.com/ui/1.13.1/themes/smoothness/jquery-ui.css', true);
 
-		// Retrieve current date for the Eagle Scout
+		// Retrieve Board of Review date for the Eagle Scout
 		$board_of_review_date = Troop380_Helpers::format_board_of_review_date( get_post_meta( $post->ID, 'board_of_review_date', true ) );
 		$board_of_review_date_is_real =  get_post_meta( $post->ID, 'board_of_review_date_is_real', true );
+
+		// Retrieve Scoutmaster
+		$scoutmaster = get_post_meta( $post->ID, 'scoutmaster', true );
 		?>
 
 		<script>
@@ -188,6 +199,10 @@ class Troop380_Admin {
 						<span style="font-style: italic;">The Board of Review date is used to group Eagle Scouts by year, and sort them by the date which they earned the Eagle Rank.  If the actual Board of Review Date is not known, specify a date during the year it was earned, and leave the "Verified Board of Review Date" unchecked.</span>
 				</td>
 			</tr>
+			<tr>
+				<td>Scoutmaster:</td>
+				<td><input type="text" name="scoutmaster" id="scoutmaster" value="<?php echo $scoutmaster; ?>" /></td>
+			</tr>
 		</table>
 		
 		<?php
@@ -204,6 +219,7 @@ class Troop380_Admin {
 			'title' => 'Title',
 			'year_earned' => 'Year Earned',
 			'board_of_review' => 'Board of Review',
+			'scoutmaster' => 'Scoutmaster',
 			'date' => 'Date'
 		);
 
@@ -242,6 +258,15 @@ class Troop380_Admin {
 
 				echo $output;
 				break;
+
+			case 'scoutmaster':
+				$scoutmaster = get_post_meta( $post_id, 'scoutmaster', true );
+				$output .= '<span>';
+				$output .= $scoutmaster;
+				$output .= '</span>';
+
+				echo $output;
+				break;
 		}
 
 	}
@@ -255,6 +280,7 @@ class Troop380_Admin {
 
 		$columns['year_earned'] = 'year_earned';
 		$columns['board_of_review'] = 'board_of_review';
+		$columns['scoutmaster'] = 'scoutmaster';
 
 		return $columns;
 	}
@@ -279,6 +305,11 @@ class Troop380_Admin {
 			$query->set('meta_key', 'board_of_review_date');
 			$query->set('meta_type', 'DATETIME');
 			$query->set('orderby', 'meta_value');
+		}
+
+		if( 'scoutmaster' == $orderby ) {
+			$query->set('meta_key', 'scoutmaster');
+			$query->set('ordery', 'meta_value');
 		}
 	}
 
