@@ -280,6 +280,7 @@ class Troop380_Admin {
 
 		$columns['year_earned'] = 'year_earned';
 		$columns['board_of_review'] = 'board_of_review';
+		$columns['scoutmaster'] = 'scoutmaster';
 
 		return $columns;
 	}
@@ -304,6 +305,11 @@ class Troop380_Admin {
 			$query->set('meta_key', 'board_of_review_date');
 			$query->set('meta_type', 'DATETIME');
 			$query->set('orderby', 'meta_value');
+		}
+
+		if( 'scoutmaster' == $orderby ) {
+			$query->set('meta_key', 'scoutmaster');
+			$query->set('ordery', 'meta_value');
 		}
 	}
 
