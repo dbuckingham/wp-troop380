@@ -13,3 +13,11 @@ Template: scouttroop
 The author of the theme wants you to do what ever you want to with it.
 flexnav by Jason Weaver http://jasonweaver.name/lab/flexiblenavigation/
 */
+
+.eagle-scout-default-content {
+    font-style: italic;
+    padding-top: 25px;
+    padding-left: 10%;
+    padding-right: 10%;
+    text-align: center;
+}

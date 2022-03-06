@@ -1,6 +1,6 @@
 <?php get_header(); ?>
 	<div id="page-content">
-		<div id="content-wide">
+		<div id="content-full">
 			<!-- Eagle Scout Post from Theme -->
 			<section>					
 		
@@ -42,15 +42,25 @@
 					</header>
 
 					<?php
-						// The content
-						the_content();
-								
-								?><p><?php the_tags(); ?></p><?php
-								wp_link_pages('before=<p>&after= </p>&next_or_number=number&pagelink=page %');
-						
-						// If singular and comments are open
-						if ( is_singular() && comments_open() )
-						comments_template( '', true );
+						$content = get_the_content();
+
+						if( strlen($content) > 0 )
+						{
+							// The content
+							the_content();
+						}
+						else
+						{
+							?>
+								<div class="eagle-scout-default-content">
+									<p>Troop 380 would love to showcase more about our Eagle Scouts!  Showcasing information about 
+									your Eagle Scout Service Project, merit badges you earned, or stories about your experience 
+									in Scouting could offer encouragement to current scouts!</p>
+
+									<p>If you would like to include more information on this page, please e-mail <a href="mailto:webmaster@bsa380.com?subject=My%20Eagle%20Scout%20update%20for%20the%20Eagles%20Nest">webmaster@bsa380.com</a></p>
+								</div>
+							<?php
+						}
 					?>
 				</article>
 
