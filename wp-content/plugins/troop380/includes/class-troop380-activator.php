@@ -31,7 +31,9 @@ class Troop380_Activator {
 		 * Custom Post Types
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-troop380-eagle-scout-post-type.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-troop380-merit-badge-post-type.php';
 		$plugin_eagle_scout_post_type = new Troop380_Eagle_Scout_Post_Type();
+		$plugin_merit_badge_post_type = new Troop380_Merit_Badge_Post_Type();
 
 		/**
 		 * The problem with the initial activation code is that when the activation hook runs, it's after the init hook has run,
@@ -44,6 +46,7 @@ class Troop380_Activator {
 		 * @link https://github.com/DevinVinson/WordPress-Plugin-Boilerplate/issues/261
 		 */
 		$plugin_eagle_scout_post_type->create_custom_post_type();
+		$plugin_merit_badge_post_type->create_custom_post_type();
 
         // Create Eagle Scout Custom Post Types from database records.
 		$plugin_eagle_scout_post_type->upgrade_to_v_1_1_0();
