@@ -125,7 +125,7 @@ class Troop380 {
 		/**
 		 * Custom Post Types
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-troop380-post-types.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-troop380-eagle-scout-post-type.php';
 
 
 		$this->loader = new Troop380_Loader();
@@ -159,12 +159,12 @@ class Troop380 {
 	private function define_admin_hooks() {
 
 		$plugin_admin = new Troop380_Admin( $this->get_plugin_name(), $this->get_version() );
-		$plugin_post_types = new Troop380_Post_types();
+		$plugin_eagle_scout_post_type = new Troop380_Eagle_Scout_Post_Type();
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 
-		$this->loader->add_action( 'init', $plugin_post_types, 'create_custom_post_type', 999);
+		$this->loader->add_action( 'init', $plugin_eagle_scout_post_type, 'create_custom_post_type', 999);
 
 		/**
 		 * Add metabox and register custom fields
@@ -196,8 +196,6 @@ class Troop380 {
 
 		// TODO - review the admin_head action.
 		// $this->loader->add_action( 'admin_head', $plugin_admin, 'add_style_to_admin_head' );
-
-
 
 	}
 
