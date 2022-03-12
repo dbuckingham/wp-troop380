@@ -30,8 +30,10 @@ class Troop380_Activator {
 		/**
 		 * Custom Post Types
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-troop380-post-types.php';
-		$plugin_post_types = new Troop380_Post_Types();
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-troop380-eagle-scout-post-type.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-troop380-merit-badge-post-type.php';
+		$plugin_eagle_scout_post_type = new Troop380_Eagle_Scout_Post_Type();
+		$plugin_merit_badge_post_type = new Troop380_Merit_Badge_Post_Type();
 
 		/**
 		 * The problem with the initial activation code is that when the activation hook runs, it's after the init hook has run,
@@ -43,7 +45,11 @@ class Troop380_Activator {
 		 *
 		 * @link https://github.com/DevinVinson/WordPress-Plugin-Boilerplate/issues/261
 		 */
-		$plugin_post_types->create_custom_post_type();
+		$plugin_eagle_scout_post_type->create_custom_post_type();
+		$plugin_merit_badge_post_type->create_custom_post_type();
+
+        // Create Eagle Scout Custom Post Types from database records.
+		$plugin_eagle_scout_post_type->upgrade_to_v_1_1_0();
 
 		/**
 		 * This is only required if the custom post type has rewrite!
@@ -62,63 +68,7 @@ class Troop380_Activator {
 		 * @link https://codex.wordpress.org/Function_Reference/flush_rewrite_rules
 		 */
 		flush_rewrite_rules();
-
-
-		// Create Eagle Scout Custom Post Types from database records.
-		self::upgrade_to_v_1_1_0();
+		
 	}
-
-	private static function upgrade_to_v_1_1_0() {
-		global $wpdb;
-
-		$query = "SELECT * FROM information_schema.TABLES WHERE TABLE_NAME = 'wp_troop380_eaglescout';";
-		$eagle_scout_table = $wpdb->get_results($query);
-		
-		if( ($wpdb->num_rows <= 0) ) { return; }
-		
-		$query = "SELECT id, YEAR(date_earned) 'year', firstname, lastname, date_earned, date_earned_is_real FROM wp_troop380_eaglescout ORDER BY date_earned, lastname, firstname;";
-		
-		$rows = $wpdb->get_results($query);
-		
-		foreach($rows as $row) {
-		
-			$wp_troop380_eaglescout_id = $row->id;
-		
-			$args = array(
-				"post_type" => "eaglescout",
-				"meta_key" => "_wp_troop380_eaglescout_id",
-				"meta_value" => $wp_troop380_eaglescout_id
-				);
-		
-			$query = new WP_Query( $args );
-		
-			$posts = $query->posts;
-		
-			if( count( $posts ) == 0 ) {
-				// Eagle Scout post does not exist and needs to be created.
-				
-				$postarr = array(
-					"post_title" => $row->firstname . " ". $row->lastname,
-					"post_type" => "eaglescout",
-					"post_status" => "publish",
-					"meta_input"=> array(
-						"board_of_review_date" => date( "m/d/Y", strtotime( $row->date_earned ) ),
-						"board_of_review_date_is_real" => $row->date_earned_is_real,
-						"year_earned" => date( "Y", strtotime( $row->date_earned ) ),
-						"_wp_troop380_eaglescout_id" => $wp_troop380_eaglescout_id
-					)
-				);
-				
-				$message = "Creating eaglescout post for " . $row->firstname . " " . $row->lastname . "(" . $wp_troop380_eaglescout_id . ")";
-				error_log($message);
-
-				$result = wp_insert_post( $postarr );
-			}
-			else {
-				$mssage = "Skipping eaglescout post for " . $row->firstname . " " . $row->lastname . "(" . $wp_troop380_eaglescout_id . ")";
-			}
-		}
-	}
-
 
 }
