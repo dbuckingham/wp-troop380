@@ -10,6 +10,9 @@ A WP plugin of useful, scouting related features, built for Troop 380 of the Lin
 - [WordPress Plugin Boilerplate Tutorials](https://github.com/JoeSz/WordPress-Plugin-Boilerplate-Tutorial/tree/master/plugin-name/tutorials)
 - [PHP Style Guide](https://gist.github.com/ryansechrest/8138375)
 - https://wpshout.com/using-wp_query-objects-without-loop/
+- http://jsfiddle.net/DBpJe/5106
+- https://www.hongkiat.com/blog/wordpress-datepicker-theme/
+- https://wordpress.stackexchange.com/questions/97533/how-do-i-use-jquery-ui-in-my-plugin
 
 ## WP_Query Snippets
 

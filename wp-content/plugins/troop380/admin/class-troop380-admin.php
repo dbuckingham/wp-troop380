@@ -74,7 +74,6 @@ class Troop380_Admin {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/troop380-admin.css', array(), $this->version, 'all' );
 
 	}
@@ -97,7 +96,6 @@ class Troop380_Admin {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/troop380-admin.js', array( 'jquery' ), $this->version, false );
 
 	}

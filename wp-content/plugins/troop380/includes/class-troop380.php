@@ -127,7 +127,8 @@ class Troop380 {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-troop380-eagle-scout-post-type.php';
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-troop380-merit-badge-post-type.php';
-
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-troop380-upcoming-event-post-type.php';
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-troop380-upcoming-event-admin.php';
 
 		$this->loader = new Troop380_Loader();
 
@@ -159,15 +160,18 @@ class Troop380 {
 	 */
 	private function define_admin_hooks() {
 
-		$plugin_admin = new Troop380_Admin( $this->get_plugin_name(), $this->get_version() );
-		$plugin_eagle_scout_post_type = new Troop380_Eagle_Scout_Post_Type();
-		$plugin_merit_badge_post_type = new Troop380_Merit_Badge_Post_Type();
+		$plugin_admin 						= new Troop380_Admin( $this->get_plugin_name(), $this->get_version() );
+		$plugin_eagle_scout_post_type 		= new Troop380_Eagle_Scout_Post_Type();
+		$plugin_merit_badge_post_type 		= new Troop380_Merit_Badge_Post_Type();
+		$plugin_upcoming_event_post_type 	= new Troop380_Upcoming_Event_Post_Type();
+		$plugin_upcoming_event_admin 		= new Troop380_Upcoming_Event_Admin();
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 
-		$this->loader->add_action( 'init', $plugin_eagle_scout_post_type, 'create_custom_post_type', 999);
-		$this->loader->add_action( 'init', $plugin_merit_badge_post_type, 'create_custom_post_type', 999);
+		$this->loader->add_action( 'init', $plugin_eagle_scout_post_type, 'create_custom_post_type', 999 );
+		$this->loader->add_action( 'init', $plugin_merit_badge_post_type, 'create_custom_post_type', 999 );
+		$this->loader->add_action( 'init', $plugin_upcoming_event_post_type, 'create_custom_post_type', 999 );
 
 		/**
 		 * Add metabox and register custom fields
@@ -176,6 +180,8 @@ class Troop380 {
 		 */
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'rerender_meta_options' );
 		$this->loader->add_action( 'save_post', $plugin_admin, 'save_meta_options' );
+
+		// $this->loader->add_action( 'admin_init', $plugin_upcoming_event_admin, 'rerender_meta_options' );
 
 		/**
 		 * Modify columns in eagle scouts list in admin area.
@@ -189,13 +195,13 @@ class Troop380 {
 		 * @link https://wordpress.stackexchange.com/questions/253640/adding-custom-columns-to-custom-post-types/253644#253644
 		 */
 		$this->loader->add_filter( 'manage_eaglescout_posts_columns', $plugin_admin, 'manage_eaglescout_posts_columns' );
-		
-		$this->loader->add_filter('manage_edit-eaglescout_sortable_columns', $plugin_admin, 'set_eaglescout_sortable_columns');
-
-		$this->loader->add_action('pre_get_posts', $plugin_admin, 'eaglescout_default_custom_orderby', 9, 2);
-		$this->loader->add_action('pre_get_posts', $plugin_admin, 'eaglescout_custom_orderby', 10, 2);
-
+		$this->loader->add_filter( 'manage_edit-eaglescout_sortable_columns', $plugin_admin, 'set_eaglescout_sortable_columns' );
+		$this->loader->add_action( 'pre_get_posts', $plugin_admin, 'eaglescout_default_custom_orderby', 9, 2 );
+		$this->loader->add_action( 'pre_get_posts', $plugin_admin, 'eaglescout_custom_orderby', 10, 2 );
 		$this->loader->add_action( 'manage_eaglescout_posts_custom_column', $plugin_admin, 'manage_eaglescout_posts_custom_column', 10, 2 );
+
+		// Upcoming Events - Define the columns which appear in the Admin area.
+		$this->loader->add_filter( 'manage_upcoming-event_posts_columns', $plugin_upcoming_event_admin, 'manage_upcoming_event_posts_columns' );
 
 		// TODO - review the admin_head action.
 		// $this->loader->add_action( 'admin_head', $plugin_admin, 'add_style_to_admin_head' );
