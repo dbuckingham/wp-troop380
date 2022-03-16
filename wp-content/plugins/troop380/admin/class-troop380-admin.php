@@ -74,6 +74,11 @@ class Troop380_Admin {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
+<<<<<<< Updated upstream
+=======
+
+		wp_enqueue_style( 'jquery-ui-style', '//code.jquery.com/ui/1.13.1/themes/smoothness/jquery-ui.css', true);
+>>>>>>> Stashed changes
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/troop380-admin.css', array(), $this->version, 'all' );
 
 	}
@@ -96,8 +101,15 @@ class Troop380_Admin {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
+<<<<<<< Updated upstream
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/troop380-admin.js', array( 'jquery' ), $this->version, false );
 
+=======
+
+		wp_enqueue_script( 'jquery-ui-datepicker' );
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/troop380-admin.js', array( 'jquery', 'jquery-ui-datepicker' ), $this->version, true );
+		
+>>>>>>> Stashed changes
 	}
 
 	/**
@@ -164,10 +176,6 @@ class Troop380_Admin {
 
 		global $post;
 
-		// Enqueue Datepicker + jQuery UI CSS
-		wp_enqueue_script( 'jquery-ui-datepicker' );
-		wp_enqueue_style( 'jquery-ui-style', '//code.jquery.com/ui/1.13.1/themes/smoothness/jquery-ui.css', true);
-
 		// Retrieve Board of Review date for the Eagle Scout
 		$board_of_review_date = Troop380_Helpers::format_board_of_review_date( get_post_meta( $post->ID, 'board_of_review_date', true ) );
 		$board_of_review_date_is_real =  get_post_meta( $post->ID, 'board_of_review_date_is_real', true );
@@ -176,18 +184,10 @@ class Troop380_Admin {
 		$scoutmaster = get_post_meta( $post->ID, 'scoutmaster', true );
 		?>
 
-		<script>
-		jQuery(document).ready(function(){
-			jQuery('#board_of_review_date').datepicker({
-				dateFormat : 'mm/dd/yy'
-			});
-		});
-		</script>
-		
 		<table>
 			<tr>
 				<td>Board of Review Date:</td>
-				<td><input type="text" name="board_of_review_date" id="board_of_review_date" value="<?php echo $board_of_review_date; ?>" /></td>
+				<td><input type="text" name="board_of_review_date" id="board_of_review_date" class="troop380-datepicker" value="<?php echo $board_of_review_date; ?>" /></td>
 			</tr>
 			<tr>
 				<td></td>
