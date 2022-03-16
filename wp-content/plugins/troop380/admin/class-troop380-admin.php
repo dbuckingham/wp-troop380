@@ -74,11 +74,8 @@ class Troop380_Admin {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-<<<<<<< Updated upstream
-=======
 
 		wp_enqueue_style( 'jquery-ui-style', '//code.jquery.com/ui/1.13.1/themes/smoothness/jquery-ui.css', true);
->>>>>>> Stashed changes
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/troop380-admin.css', array(), $this->version, 'all' );
 
 	}
@@ -101,15 +98,9 @@ class Troop380_Admin {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-<<<<<<< Updated upstream
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/troop380-admin.js', array( 'jquery' ), $this->version, false );
-
-=======
 
 		wp_enqueue_script( 'jquery-ui-datepicker' );
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/troop380-admin.js', array( 'jquery', 'jquery-ui-datepicker' ), $this->version, true );
-		
->>>>>>> Stashed changes
 	}
 
 	/**
