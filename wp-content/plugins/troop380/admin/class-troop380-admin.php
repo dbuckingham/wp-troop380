@@ -168,7 +168,7 @@ class Troop380_Admin {
 		global $post;
 
 		// Retrieve Board of Review date for the Eagle Scout
-		$board_of_review_date = Troop380_Helpers::format_board_of_review_date( get_post_meta( $post->ID, 'board_of_review_date', true ) );
+		$board_of_review_date = Troop380_Helpers::format_shortdate( get_post_meta( $post->ID, 'board_of_review_date', true ) );
 		$board_of_review_date_is_real =  get_post_meta( $post->ID, 'board_of_review_date_is_real', true );
 
 		// Retrieve Scoutmaster
@@ -237,7 +237,7 @@ class Troop380_Admin {
             	break;
 				
 			case "board_of_review":
-				$board_of_review_date = Troop380_Helpers::format_board_of_review_date( get_post_meta($post_id, 'board_of_review_date', true) );
+				$board_of_review_date = Troop380_Helpers::format_shortdate( get_post_meta($post_id, 'board_of_review_date', true) );
 				$board_of_review_date_is_real = (get_post_meta($post_id, 'board_of_review_date_is_real', true) == 'on');
 
 				$output .= '<span'; 

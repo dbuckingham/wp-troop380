@@ -55,28 +55,16 @@ class Troop380_Upcoming_Event_Admin {
 
 		global $post;
 
-		wp_enqueue_script( 'jquery-ui-datepicker' );
-		wp_enqueue_style( 'jquery-ui-style', '//code.jquery.com/ui/1.13.1/themes/smoothness/jquery-ui.css', true);
-
-        // TODO - Retrieve meta values
-        $activity_month = "";
-        $location = "";
-        $patrol = "";
-        $coordinator = "";
+        $activity_month = Troop380_Helpers::format_shortdate( get_post_meta( $post->ID, 'activity_month', true ) );
+        $location = get_post_meta( $post->ID, 'location', true );
+        $patrol = get_post_meta( $post->ID, 'patrol', true );
+        $coordinator = get_post_meta( $post->ID, 'coordinator', true );
 		?>
 
-		<script>
-		jQuery(document).ready(function(){
-			jQuery('#activity_month').datepicker({
-				dateFormat : 'mm/dd/yy'
-			});
-		});
-		</script>
-		
 		<table>
 			<tr>
 				<td>Month:</td>
-				<td><input type="text" name="activity_month" id="activity_month" value="<?php echo $activity_month; ?>" /></td>
+				<td><input type="text" name="activity_month" id="activity_month" class="troop380-datepicker" value="<?php echo $activity_month; ?>" /></td>
 			</tr>
             <tr>
 				<td>Location:</td>
@@ -104,9 +92,11 @@ class Troop380_Upcoming_Event_Admin {
 	public function manage_upcoming_event_posts_columns( $columns ) {
 
 		$custom_columns = array(
-            'month' => 'Month',
+			'cb' => $columns['cb'],
             'title' => 'Title',
-            'patrol' => 'Patrol'
+            'month' => 'Month',
+			'patrol' => 'Patrol',
+			'coordinator' => 'Coordinator'
 		);
 
 		return $custom_columns;
@@ -123,80 +113,85 @@ class Troop380_Upcoming_Event_Admin {
 
 		if ( ! current_user_can( 'edit_posts' ) ) return;
 
-		if ( array_key_exists( 'board_of_review_date', $_POST ) ) {
+		if ( array_key_exists( 'activity_month', $_POST ) ) {
 			
-			$board_of_review_date = strtotime($_POST['board_of_review_date']);
+			$activity_month = strtotime($_POST['activity_month']);
 
 			update_post_meta(
 				$post_id,
-				'board_of_review_date',
-				date("Ymd", $board_of_review_date)
-			);
-	
-			update_post_meta(
-				$post_id,
-				'year_earned',
-				date("Y", $board_of_review_date)
+				'activity_month',
+				date("Ymd", $activity_month)
 			);
 		}
 	
-		if ( array_key_exists( 'board_of_review_date_is_real', $_POST ) ) {
+		if ( array_key_exists( 'location', $_POST ) ) {
 			update_post_meta(
 				$post_id,
-				'board_of_review_date_is_real',
-				$_POST['board_of_review_date_is_real']
+				'location',
+				$_POST['location']
 			);
 		}
 
-		if ( array_key_exists( 'scoutmaster', $_POST ) ) {
+		if ( array_key_exists( 'patrol', $_POST ) ) {
 			update_post_meta(
 				$post_id,
-				'scoutmaster',
-				$_POST['scoutmaster']
+				'patrol',
+				$_POST['patrol']
 			);
 		}
 
+		if ( array_key_exists( 'coordinator', $_POST ) ) {
+			update_post_meta(
+				$post_id,
+				'coordinator',
+				$_POST['coordinator']
+			);
+		}
 	}
 
 
-
-
 	/**
-	 * Populate new columns in customers list in admin area
+	 * Populate new columns in upcoming-events list in admin area
 	 * 
 	 * @since	 1.1.0
 	 */
-	public function manage_eaglescout_posts_custom_column( $column, $post_id ) {
+	public function manage_posts_custom_column( $column, $post_id ) {
 
 		$output = "";
 
 		// Populate column form meta
 		switch ( $column ) {
-			case "year_earned":
-				$year_earned = get_post_meta($post_id, 'year_earned', true);
+			case "month":
+				$activity_month = Troop380_Helpers::format_month_year( get_post_meta($post_id, 'activity_month', true) );
             	$output .= '<span>'; 
-				$output .= $year_earned;
+				$output .= $activity_month;
 				$output .= '</span>';
 
 				echo $output;
             	break;
 				
-			case "board_of_review":
-				$board_of_review_date = Troop380_Helpers::format_board_of_review_date( get_post_meta($post_id, 'board_of_review_date', true) );
-				$board_of_review_date_is_real = (get_post_meta($post_id, 'board_of_review_date_is_real', true) == 'on');
-
+			case "location":
+				$location = get_post_meta($post_id, 'location', true);
 				$output .= '<span'; 
-				$output .= ($board_of_review_date_is_real) ? '>' : ' style="font-style: italic;">'; 
-				$output .= $board_of_review_date;
+				$output .= $location;
 				$output .= '</span>';
 
 				echo $output;
 				break;
 
-			case 'scoutmaster':
-				$scoutmaster = get_post_meta( $post_id, 'scoutmaster', true );
+			case 'patrol':
+				$patrol = get_post_meta( $post_id, 'patrol', true );
 				$output .= '<span>';
-				$output .= $scoutmaster;
+				$output .= $patrol;
+				$output .= '</span>';
+
+				echo $output;
+				break;
+
+			case 'coordinator':
+				$coordinator = get_post_meta( $post_id, 'coordinator', true );
+				$output .= '<span>';
+				$output .= $coordinator;
 				$output .= '</span>';
 
 				echo $output;
@@ -206,15 +201,15 @@ class Troop380_Upcoming_Event_Admin {
 	}
 
 	/**
-	 * Define the sortable columns for eaglescout post types.
+	 * Define the sortable columns for upcoming-events post types.
 	 * 
 	 * @since	1.1.2
 	 */
-	public function set_eaglescout_sortable_columns( $columns ) {
+	public function set_upcoming_event_sortable_columns( $columns ) {
 
-		$columns['year_earned'] = 'year_earned';
-		$columns['board_of_review'] = 'board_of_review';
-		$columns['scoutmaster'] = 'scoutmaster';
+		$columns['month'] = 'month';
+		$columns['patrol'] = 'patrol';
+		$columns['coordinator'] = 'coordinator';
 
 		return $columns;
 	}
@@ -224,25 +219,25 @@ class Troop380_Upcoming_Event_Admin {
 	 * 
 	 * @since	1.1.2
 	 */
-	public function eaglescout_custom_orderby( $query ) {
+	public function upcoming_event_custom_orderby( $query ) {
 		if( ! is_admin() )
 			return;
 
 		$orderby = $query->get( 'orderby' );
 
-		if( 'year_earned' == $orderby ) {
-			$query->set('meta_key', 'year_earned');
-			$query->set('orderby', 'meta_value_num');
-		}
-
-		if( 'board_of_review' == $orderby ) {
-			$query->set('meta_key', 'board_of_review_date');
+		if( 'month' == $orderby ) {
+			$query->set('meta_key', 'activity_month');
 			$query->set('meta_type', 'DATETIME');
 			$query->set('orderby', 'meta_value');
 		}
 
-		if( 'scoutmaster' == $orderby ) {
-			$query->set('meta_key', 'scoutmaster');
+		if( 'patrol' == $orderby ) {
+			$query->set('meta_key', 'patrol');
+			$query->set('orderby', 'meta_value');
+		}
+
+		if( 'coordinator' == $orderby ) {
+			$query->set('meta_key', 'coordinator');
 			$query->set('ordery', 'meta_value');
 		}
 	}
@@ -252,11 +247,11 @@ class Troop380_Upcoming_Event_Admin {
 	 * 
 	 * @since	1.1.2
 	 */
-	public function eaglescout_default_custom_orderby( $query )	{
-		if( $query->get('post_type') == 'eaglescout' ){
+	public function upcoming_event_default_custom_orderby( $query )	{
+		if( $query->get('post_type') == 'upcoming-event' ){
 			
 			if( $query->get('orderby') == '' ) {
-				$query->set('meta_key', 'board_of_review_date');
+				$query->set('meta_key', 'activity_month');
 				$query->set('meta_type', 'DATETIME');
 				$query->set('orderby', 'meta_value');
 			}

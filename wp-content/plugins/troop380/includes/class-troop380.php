@@ -181,7 +181,8 @@ class Troop380 {
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'rerender_meta_options' );
 		$this->loader->add_action( 'save_post', $plugin_admin, 'save_meta_options' );
 
-		// $this->loader->add_action( 'admin_init', $plugin_upcoming_event_admin, 'rerender_meta_options' );
+		$this->loader->add_action( 'admin_init', $plugin_upcoming_event_admin, 'rerender_meta_options' );
+		$this->loader->add_action( 'save_post', $plugin_upcoming_event_admin, 'save_meta_options' );
 
 		/**
 		 * Modify columns in eagle scouts list in admin area.
@@ -202,6 +203,10 @@ class Troop380 {
 
 		// Upcoming Events - Define the columns which appear in the Admin area.
 		$this->loader->add_filter( 'manage_upcoming-event_posts_columns', $plugin_upcoming_event_admin, 'manage_upcoming_event_posts_columns' );
+		$this->loader->add_filter( 'manage_edit-upcoming-event_sortable_columns', $plugin_upcoming_event_admin, 'set_upcoming_event_sortable_columns' );
+		$this->loader->add_action( 'pre_get_posts', $plugin_upcoming_event_admin, 'upcoming_event_default_custom_orderby', 9, 2 );
+		$this->loader->add_action( 'pre_get_posts', $plugin_upcoming_event_admin, 'upcoming_event_custom_orderby', 10, 2 );
+		$this->loader->add_action( 'manage_upcoming-event_posts_custom_column', $plugin_upcoming_event_admin, 'manage_posts_custom_column', 10, 2 );
 
 		// TODO - review the admin_head action.
 		// $this->loader->add_action( 'admin_head', $plugin_admin, 'add_style_to_admin_head' );

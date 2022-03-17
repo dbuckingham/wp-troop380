@@ -18,17 +18,20 @@
  */
 class Troop380_Helpers {
 
-    /**
-	 * Used to format the Board of Review Date meta value for display.
-	 * 
-	 * @since	1.1.4
-	 */
-	public static function format_board_of_review_date( $board_of_review_date ) {
-		if( $board_of_review_date == "" ) {
-			return date( "m/d/Y" );
+	 public static function format_month_year( $date_string ) {
+		return self::format_date( $date_string, "m/Y" );
+	}
+
+	public static function format_shortdate( $date_string ) {
+		return self::format_date( $date_string, "m/d/Y" );
+	}
+
+	public static function format_date( $date_string, $format_string ) {
+		if( $date_string == "" ) {
+			return date( $format_string );
 		}
 
-		return date( "m/d/Y", strtotime( $board_of_review_date ) );
+		return date( $format_string, strtotime( $date_string ) );
 	}
 
 }
