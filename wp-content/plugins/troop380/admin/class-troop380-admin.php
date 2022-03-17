@@ -205,6 +205,7 @@ class Troop380_Admin {
 	public function manage_eaglescout_posts_columns( $columns ) {
 
 		$custom_columns = array(
+			'cb' => $columns['cb'],
 			'title' => 'Title',
 			'year_earned' => 'Year Earned',
 			'board_of_review' => 'Board of Review',
