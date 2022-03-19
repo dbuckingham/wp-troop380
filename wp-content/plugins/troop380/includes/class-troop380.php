@@ -170,7 +170,7 @@ class Troop380 {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 
 		$this->loader->add_action( 'init', $plugin_eagle_scout_post_type, 'create_custom_post_type', 999 );
-		$this->loader->add_action( 'init', $plugin_merit_badge_post_type, 'create_custom_post_type', 999 );
+		// $this->loader->add_action( 'init', $plugin_merit_badge_post_type, 'create_custom_post_type', 999 );
 		$this->loader->add_action( 'init', $plugin_upcoming_event_post_type, 'create_custom_post_type', 999 );
 
 		/**
