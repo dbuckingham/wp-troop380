@@ -25,6 +25,10 @@
     min-height: 100%''
 }
 
+.card.no-upcoming-events {
+    font-style: italic;
+}
+
 .card article {
     padding: 20px;
     flex: 1;

@@ -26,10 +26,18 @@ class Troop380_Upcoming_Events_Shortcode {
         $atts = array_change_key_case( (array)$atts, CASE_LOWER );
 
         $upcoming_events = self::get_upcoming_events_from_posts();
+        $upcoming_events = array();
 
         $output = "<div class='t380-upcoming-events'>";
-        foreach($upcoming_events as $upcoming_event) {
-            $output .= self::format_upcoming_event_for_shortcode( $upcoming_event );
+        if( empty($upcoming_events) ) {
+            $output .= "<div class='card no-upcoming-events'>";
+            $output .= "There are no upcoming events planned.";
+            $output .= "</div>";
+        }
+        else {
+            foreach($upcoming_events as $upcoming_event) {
+                $output .= self::format_upcoming_event_for_shortcode( $upcoming_event );
+            }
         }
         $output .= "</div>";
 
