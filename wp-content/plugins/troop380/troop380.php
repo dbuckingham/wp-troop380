@@ -16,7 +16,7 @@
  * Plugin Name:       Troop 380
  * Plugin URI:        https://github.com/dbuckingham/wp-troop380
  * Description:       A WP plugin of useful, scouting related features, built for Troop 380 of the Lincoln Heritage Council.
- * Version:           1.2.0
+ * Version:           1.2.1
  * Author:            David Buckingham
  * Author URI:        https://github.com/dbuckingham/wp-troop380
  * License:           GPL-2.0+
