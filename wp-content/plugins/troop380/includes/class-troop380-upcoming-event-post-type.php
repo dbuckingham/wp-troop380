@@ -319,7 +319,7 @@ class Troop380_Upcoming_Event_Post_Type {
                  *
                  * @link https://wordpress.stackexchange.com/questions/8779/placing-a-custom-post-type-menu-above-the-posts-menu-using-menu-position/65823#65823
                  */
-                'menu_position'         => 23,
+                'menu_position'         => 21.2,
 
                 /**
                  * Whether the post type should be used publicly via the admin or by front-end users.  This

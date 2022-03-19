@@ -321,7 +321,7 @@ class Troop380_Eagle_Scout_Post_Type {
                  *
                  * @link https://wordpress.stackexchange.com/questions/8779/placing-a-custom-post-type-menu-above-the-posts-menu-using-menu-position/65823#65823
                  */
-                'menu_position'         => 21,
+                'menu_position'         => 21.1,
 
                 /**
                  * Whether the post type should be used publicly via the admin or by front-end users.  This
