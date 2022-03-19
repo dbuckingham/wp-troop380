@@ -19,19 +19,23 @@
 class Troop380_Helpers {
 
 	 public static function format_month_year( $date_string ) {
-		return self::format_date( $date_string, "m/Y" );
+		return self::format_date( "m/Y", $date_string );
 	}
 
 	public static function format_shortdate( $date_string ) {
-		return self::format_date( $date_string, "m/d/Y" );
+		return self::format_date( "m/d/Y", $date_string );
 	}
 
-	public static function format_date( $date_string, $format_string ) {
+	public static function format_date( $format_string, $date_string ) {
 		if( $date_string == "" ) {
 			return date( $format_string );
 		}
 
 		return date( $format_string, strtotime( $date_string ) );
+	}
+
+	public static function get_first_of_the_month() {
+		return date( "m/d/Y", strtotime( date('m') . "/01/" . date('Y') ) );
 	}
 
 }

@@ -2,3 +2,67 @@
  * All of the CSS for your public-facing functionality should be
  * included in this file.
  */
+
+.t380-upcoming-events {
+    background-color: #005A9C;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+    align-content: space-around;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 20px;
+}
+
+.card {
+    background-color: #f1f1f1;
+    margin-top: 20px;
+    width: 300px;
+    text-align: center;
+
+    display: flex;
+    flex-direction: column;
+    min-height: 100%''
+}
+
+.card article {
+    padding: 20px;
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card h1 {
+    font-size: 16px;
+    margin: 0;
+    color: #333;
+}
+
+.card .title {
+    font-size: 22px;
+    padding-top: 15px;
+    color: #CE1126;
+}
+
+.card .location {
+    font-style: italic;
+}
+
+.card .info {
+    padding-top: 10px;
+}
+
+.card .last {
+    padding-bottom: 20px;    
+    flex: 1;
+    align-content: flex-start;
+}
+
+.card span {
+    font-size: 12px;
+    font-weight: bold;
+    color: #999;
+    text-transform: uppercase;
+}

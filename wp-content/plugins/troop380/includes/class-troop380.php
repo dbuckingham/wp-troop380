@@ -235,6 +235,7 @@ class Troop380 {
 		 * @link https://github.com/DevinVinson/WordPress-Plugin-Boilerplate/issues/262
 		 */
 		$this->loader->add_shortcode( "eaglescouts", $plugin_public, "eaglescouts_shortcode", $priority = 10, $accepted_args = 2 );
+		$this->loader->add_shortcode( "upcoming-events", $plugin_public, "upcomingevents_shortcode", $priority = 10, $accepted_args = 2 );
 
 	}
 

@@ -114,4 +114,12 @@ class Troop380_Public {
 	
 	}
 
+
+	public function upcomingevents_shortcode( $atts ) {
+
+		require_once plugin_dir_path( __FILE__ ) . 'class-troop380-upcoming-events-shortcode.php';
+	
+		return Troop380_Upcoming_Events_Shortcode::run($atts);
+
+	}
 }

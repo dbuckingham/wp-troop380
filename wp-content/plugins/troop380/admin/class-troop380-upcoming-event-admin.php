@@ -59,6 +59,7 @@ class Troop380_Upcoming_Event_Admin {
         $location = get_post_meta( $post->ID, 'location', true );
         $patrol = get_post_meta( $post->ID, 'patrol', true );
         $coordinator = get_post_meta( $post->ID, 'coordinator', true );
+		$link = get_post_meta( $post->ID, 'link', true );
 		?>
 
 		<table>
@@ -78,6 +79,10 @@ class Troop380_Upcoming_Event_Admin {
                 <td>Coordinator:</td>
                 <td><input type="text" name="coordinator" id="coordinator" value="<?php echo $coordinator; ?>" /></td>
             </tr>
+			<tr>
+				<td>Link:</td>
+				<td><input type="text" name="link" id="link" value="<?php echo $link; ?>" /></td>
+			</tr>
 		</table>
 		
 		<?php
@@ -107,7 +112,7 @@ class Troop380_Upcoming_Event_Admin {
 	/**
 	 * Save custom fields
 	 * 
-	 * @since	 1.1.0
+	 * @since	 1.2.0
 	 */
 	public function save_meta_options( $post_id ) {
 
@@ -147,13 +152,21 @@ class Troop380_Upcoming_Event_Admin {
 				$_POST['coordinator']
 			);
 		}
+
+		if ( array_key_exists( 'link', $_POST ) ) {
+			update_post_meta(
+				$post_id,
+				'link',
+				$_POST['link']
+			);
+		}
 	}
 
 
 	/**
 	 * Populate new columns in upcoming-events list in admin area
 	 * 
-	 * @since	 1.1.0
+	 * @since	 1.2.0
 	 */
 	public function manage_posts_custom_column( $column, $post_id ) {
 
@@ -203,7 +216,7 @@ class Troop380_Upcoming_Event_Admin {
 	/**
 	 * Define the sortable columns for upcoming-events post types.
 	 * 
-	 * @since	1.1.2
+	 * @since	1.2.0
 	 */
 	public function set_upcoming_event_sortable_columns( $columns ) {
 
@@ -217,7 +230,7 @@ class Troop380_Upcoming_Event_Admin {
 	/**
 	 * Modifies a WP_Query object to sort by meta-values.
 	 * 
-	 * @since	1.1.2
+	 * @since	1.2.0
 	 */
 	public function upcoming_event_custom_orderby( $query ) {
 		if( ! is_admin() )
@@ -245,7 +258,7 @@ class Troop380_Upcoming_Event_Admin {
 	/**
 	 * Modifies a WP_Query object to sort eaglescout post types by Board of Review Date by default.
 	 * 
-	 * @since	1.1.2
+	 * @since	1.2.0
 	 */
 	public function upcoming_event_default_custom_orderby( $query )	{
 		if( $query->get('post_type') == 'upcoming-event' ){

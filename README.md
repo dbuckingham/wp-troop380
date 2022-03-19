@@ -13,6 +13,7 @@ A WP plugin of useful, scouting related features, built for Troop 380 of the Lin
 - http://jsfiddle.net/DBpJe/5106
 - https://www.hongkiat.com/blog/wordpress-datepicker-theme/
 - https://wordpress.stackexchange.com/questions/97533/how-do-i-use-jquery-ui-in-my-plugin
+- https://webdesign.tutsplus.com/tutorials/solving-problems-with-css-grid-and-flexbox-the-card-ui--cms-27468
 
 ## WP_Query Snippets
 
