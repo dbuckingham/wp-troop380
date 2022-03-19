@@ -75,6 +75,7 @@ class Troop380_Admin {
 		 * class.
 		 */
 
+		wp_enqueue_style( 'jquery-ui-style', '//code.jquery.com/ui/1.13.1/themes/smoothness/jquery-ui.css', true);
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/troop380-admin.css', array(), $this->version, 'all' );
 
 	}
@@ -98,8 +99,8 @@ class Troop380_Admin {
 		 * class.
 		 */
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/troop380-admin.js', array( 'jquery' ), $this->version, false );
-
+		wp_enqueue_script( 'jquery-ui-datepicker' );
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/troop380-admin.js', array( 'jquery', 'jquery-ui-datepicker' ), $this->version, true );
 	}
 
 	/**
@@ -166,30 +167,18 @@ class Troop380_Admin {
 
 		global $post;
 
-		// Enqueue Datepicker + jQuery UI CSS
-		wp_enqueue_script( 'jquery-ui-datepicker' );
-		wp_enqueue_style( 'jquery-ui-style', '//code.jquery.com/ui/1.13.1/themes/smoothness/jquery-ui.css', true);
-
 		// Retrieve Board of Review date for the Eagle Scout
-		$board_of_review_date = Troop380_Helpers::format_board_of_review_date( get_post_meta( $post->ID, 'board_of_review_date', true ) );
+		$board_of_review_date = Troop380_Helpers::format_shortdate( get_post_meta( $post->ID, 'board_of_review_date', true ) );
 		$board_of_review_date_is_real =  get_post_meta( $post->ID, 'board_of_review_date_is_real', true );
 
 		// Retrieve Scoutmaster
 		$scoutmaster = get_post_meta( $post->ID, 'scoutmaster', true );
 		?>
 
-		<script>
-		jQuery(document).ready(function(){
-			jQuery('#board_of_review_date').datepicker({
-				dateFormat : 'mm/dd/yy'
-			});
-		});
-		</script>
-		
 		<table>
 			<tr>
 				<td>Board of Review Date:</td>
-				<td><input type="text" name="board_of_review_date" id="board_of_review_date" value="<?php echo $board_of_review_date; ?>" /></td>
+				<td><input type="text" name="board_of_review_date" id="board_of_review_date" class="troop380-datepicker" value="<?php echo $board_of_review_date; ?>" /></td>
 			</tr>
 			<tr>
 				<td></td>
@@ -216,6 +205,7 @@ class Troop380_Admin {
 	public function manage_eaglescout_posts_columns( $columns ) {
 
 		$custom_columns = array(
+			'cb' => $columns['cb'],
 			'title' => 'Title',
 			'year_earned' => 'Year Earned',
 			'board_of_review' => 'Board of Review',
@@ -248,7 +238,7 @@ class Troop380_Admin {
             	break;
 				
 			case "board_of_review":
-				$board_of_review_date = Troop380_Helpers::format_board_of_review_date( get_post_meta($post_id, 'board_of_review_date', true) );
+				$board_of_review_date = Troop380_Helpers::format_shortdate( get_post_meta($post_id, 'board_of_review_date', true) );
 				$board_of_review_date_is_real = (get_post_meta($post_id, 'board_of_review_date_is_real', true) == 'on');
 
 				$output .= '<span'; 

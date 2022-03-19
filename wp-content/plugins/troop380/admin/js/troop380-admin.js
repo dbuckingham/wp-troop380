@@ -29,4 +29,30 @@
 	 * practising this, we should strive to set a better example in our own work.
 	 */
 
+	$(".troop380-datepicker").datepicker({
+		dateFormat : 'mm/dd/yy'	
+	});
+
+	$(".troop380-monthpicker").datepicker({
+		dateFormat: "mm/yy",
+		changeMonth: true,
+		changeYear: true,
+		showButtonPanel: true,
+		
+		onClose: function(dateText, inst) {
+			var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+            var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+            $(this).val($.datepicker.formatDate('MM yy', new Date(year, month, 1)));
+		}
+	});
+
+	$(".troop380-monthpicker").focus(function() {
+		$(".ui-datepicker-calendar").hide();
+        $("#ui-datepicker-div").position({
+            my: "center top",
+            at: "center bottom",
+            of: $(this)
+        });
+	});
+
 })( jQuery );
