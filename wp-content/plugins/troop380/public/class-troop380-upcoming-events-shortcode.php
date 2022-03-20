@@ -26,7 +26,6 @@ class Troop380_Upcoming_Events_Shortcode {
         $atts = array_change_key_case( (array)$atts, CASE_LOWER );
 
         $upcoming_events = self::get_upcoming_events_from_posts();
-        $upcoming_events = array();
 
         $output = "<div class='t380-upcoming-events'>";
         if( empty($upcoming_events) ) {
