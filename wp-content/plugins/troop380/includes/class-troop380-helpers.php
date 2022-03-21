@@ -18,7 +18,7 @@
  */
 class Troop380_Helpers {
 
-	 public static function format_month_year( $date_string ) {
+	public static function format_month_year( $date_string ) {
 		return self::format_date( "m/Y", $date_string );
 	}
 

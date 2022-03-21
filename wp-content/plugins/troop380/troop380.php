@@ -16,7 +16,7 @@
  * Plugin Name:       Troop 380
  * Plugin URI:        https://github.com/dbuckingham/wp-troop380
  * Description:       A WP plugin of useful, scouting related features, built for Troop 380 of the Lincoln Heritage Council.
- * Version:           1.2.2
+ * Version:           1.2.3
  * Author:            David Buckingham
  * Author URI:        https://github.com/dbuckingham/wp-troop380
  * License:           GPL-2.0+
@@ -35,7 +35,7 @@ if ( ! defined( 'WPINC' ) ) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'TROOP380_VERSION', '1.2.2' );
+define( 'TROOP380_VERSION', '1.2.3' );
 
 /**
  * The code that runs during plugin activation.

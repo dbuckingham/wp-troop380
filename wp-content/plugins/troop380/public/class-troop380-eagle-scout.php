@@ -44,7 +44,7 @@ class Troop380_Eagle_Scout {
         $this->name = $post->post_title;
 
         $board_of_review_date = get_post_meta( $post->ID, 'board_of_review_date', true );
-        $this->board_of_review_date = Troop380_Helpers::format_board_of_review_date( $board_of_review_date );
+        $this->board_of_review_date = Troop380_Helpers::format_shortdate( $board_of_review_date );
 
         $this->year_earned = get_post_meta( $post->ID, 'year_earned', true );
 
