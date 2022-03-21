@@ -22,7 +22,7 @@
 						if( $board_of_review_date_is_real )
 						{
 						?>
-						<span class="eagle-scout-meta">Earned on <?php echo date( get_option('date_format'), strtotime( get_post_meta($post->ID, 'board_of_review_date', true) ) ); ?><span>
+						<span class="eagle-scout-meta">Earned on <?php echo date( get_option('date_format'), strtotime( get_post_meta($post->ID, 'board_of_review_date', true) ) ); ?><span><br />
 						<?php 
 						}
 						?>
@@ -32,7 +32,7 @@
 						if( $scoutmaster != "" )
 						{
 						?>
-						<br /><span class="eagle-scout-meta"><?php echo get_post_meta($post->ID, 'scoutmaster', true); ?>, Scoutmaster</span>
+						<span class="eagle-scout-meta"><?php echo get_post_meta($post->ID, 'scoutmaster', true); ?>, Scoutmaster</span>
 						<?php
 						}
 						?>

@@ -14,7 +14,6 @@ Template Name: Landing Page
 					<?php while ( have_posts() ) : the_post(); ?>
 
 						<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-						<!-- <h1 class="entry-title"><?php the_title(); ?></h1> -->
 
 			    <?php
 			        // The content
