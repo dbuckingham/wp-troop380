@@ -29,7 +29,8 @@ class Troop380_Eagle_Scout_Shortcode {
                 "mode" => "full",
                 "order" => "desc",
                 "offset" => 0,
-                "show_board_of_review_date" => "true"
+                "show_board_of_review_date" => "true",
+                "heading_level" => "2"
             ), $atts
         );
 
@@ -169,7 +170,7 @@ class Troop380_Eagle_Scout_Shortcode {
         $show_board_of_review_date = filter_var( $atts["show_board_of_review_date"], FILTER_VALIDATE_BOOLEAN );
 
         foreach( $eagle_scouts_by_year as $year => $eagle_scouts_in_year ) {
-            $output .= "<h2 id=" . $year . " class='eagleScoutYear'>" . $year . "</h2>";
+            $output .= "<h" . $atts["heading_level"] . " id=" . $year . " class='eagleScoutYear'>" . $year . "</h" . $atts["heading_level"] . ">";
 
             foreach( $eagle_scouts_in_year as $eagle_scout ) {
                 $output .= "<div><a href='" . $eagle_scout->permalink . "'>" . $eagle_scout->name . "</a>" . ( 
