@@ -422,7 +422,7 @@ class Troop380_Upcoming_Event_Post_Type {
                  */
                 'custom_caps_users'     => array(
                     'administrator',
-                    // 'editor',
+                    'editor',
                     // 'author',
                     // 'contributor',
                     // 'subscriber',

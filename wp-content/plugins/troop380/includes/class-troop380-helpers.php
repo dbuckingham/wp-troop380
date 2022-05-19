@@ -35,7 +35,7 @@ class Troop380_Helpers {
 	}
 
 	public static function get_first_of_the_month() {
-		return date( "m/d/Y", strtotime( date('m') . "/01/" . date('Y') ) );
+		return date( "Ymd", strtotime( date('m') . "/01/" . date('Y') ) );
 	}
 
 }

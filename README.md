@@ -137,3 +137,45 @@ foreach( $query->posts as $post ) {
 }
 echo "</table>";
 ```
+
+```
+<?php
+$args = array(
+	"post_type" => "eaglescout",
+	"nopaging" => true,
+	"meta_query" => array(
+		"key" => "year_earned",
+		"value" => "2022",
+		"compare" => "="
+	),
+	"meta_key" => "board_of_review_date",
+	"meta_type" => "DATETIME",
+	"orderby" => "meta_value",
+	"order" => "desc"
+);
+
+$query = new WP_Query( $args );
+
+
+echo "<table>";
+foreach( $query->posts as $post ) {
+
+	$output = "<tr>";
+	$output .= "<td>";
+	$output .= $post->ID;
+	$output .= "</td>";
+	$output .= "<td>";
+	$output .= $post->post_title;
+	$output .= "</td>";
+	$output .= "<td>";
+	$output .= get_post_meta( $post->ID, "board_of_review_date", true );
+	$output .= "</td>";
+	$output .= "<td>";
+	$output .= get_post_meta( $post->ID, "year_earned", true );
+	$output .= "</td>";
+	$output .= "</tr>";
+	
+	echo $output;
+}
+echo "</table>";
+```
