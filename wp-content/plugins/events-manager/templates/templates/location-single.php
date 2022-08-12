@@ -13,5 +13,13 @@
  */
 global $EM_Location;
 /* @var $EM_Location EM_Location */
-echo  $EM_Location->output_single();
+if( empty($args['id']) ) $args['id'] = rand(); // prevent warnings
+$id = esc_attr($args['id']);
 ?>
+<div class="<?php em_template_classes('view-container'); ?>" id="em-view-<?php echo $id; ?>" data-view="location">
+	<div class="<?php em_template_classes('location-single'); ?> em-location-<?php echo esc_attr($EM_Location->location_id); ?>" id="em-location-<?php echo $id; ?>" data-view-id="<?php echo $id; ?>">
+		<?php
+		echo $EM_Location->output_single();
+		?>
+	</div>
+</div>

@@ -309,12 +309,20 @@ class Classic_Search {
 	 * @param WP_Query $query A WP_Query instance.
 	 */
 	public function maybe_add_post_type_as_var( WP_Query $query ) {
-		$post_type = ( ! empty( $_GET['post_type'] ) ) ? $_GET['post_type'] : false; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-		if ( $this->should_handle_query( $query ) && $post_type ) {
-			$post_types = ( is_string( $post_type ) && false !== strpos( $post_type, ',' ) )
-				? explode( ',', $post_type )
-				: (array) $post_type;
-			$post_types = array_map( 'sanitize_key', $post_types );
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended
+		if ( $this->should_handle_query( $query ) && ! empty( $_GET['post_type'] ) ) {
+			if ( is_array( $_GET['post_type'] ) ) {
+				$post_types = array_map( 'sanitize_key', $_GET['post_type'] );
+			} else {
+				$post_types = array_map(
+					'sanitize_key',
+					explode(
+						',',
+						sanitize_text_field( wp_unslash( $_GET['post_type'] ) )
+					)
+				);
+			}
+			// phpcs:enable WordPress.Security.NonceVerification.Recommended
 			$query->set( 'post_type', $post_types );
 		}
 	}
@@ -461,7 +469,6 @@ class Classic_Search {
 		$this->do_search( $query );
 
 		if ( ! is_array( $this->search_result ) ) {
-			/** This action is documented in modules/search/class.jetpack-search.php */
 			do_action( 'jetpack_search_abort', 'no_search_results_array', $this->search_result );
 			return $posts;
 		}
@@ -507,7 +514,6 @@ class Classic_Search {
 	public function do_search( WP_Query $query ) {
 		if ( ! $this->should_handle_query( $query ) ) {
 			// If we make it here, either 'filter__posts_pre_query' somehow allowed it or a different entry to do_search.
-			/** This action is documented in modules/search/class.jetpack-search.php */
 			do_action( 'jetpack_search_abort', 'search_attempted_non_search_query', $query );
 			return;
 		}

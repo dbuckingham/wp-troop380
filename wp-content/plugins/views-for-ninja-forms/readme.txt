@@ -1,10 +1,10 @@
 === Views for Ninja Forms - Display Ninja Forms Submissions on your site ===
 Contributors: aman086, webholics
 Tags: ninja forms, views, table view, list view, directory, display ninja forms submissions, contact form
-Requires at least: 4.4
+Requires at least: 5.2
 Donate link: https://paypal.me/webholics
-Tested up to: 5.9
-Stable tag: 2.6
+Tested up to: 6.0
+Stable tag: 2.6.4
 License: GPLv2 or later
 
 Display Ninja Forms Submissions on your site frontend using drag &amp; drop View builder.
@@ -106,6 +106,19 @@ No, you can create as many views as you like &amp; use it anywehere on your site
 3. Submissions shown in frontend.
 
 == Changelog ==
+2.6.4 (28th May 2022)
+Fix: General bug fixes.
+
+2.6.3 (16th May 2022)
+Tweak:Updated WordPress compatible version.
+Fix: Made pagination text translatble.
+
+2.6.2 (21st April 2022)
+Fix: Sequence Number not displaying.
+
+2.6.1 (6th April 2022)
+Fix: Sanitized pagination variable in query string.
+
 2.6 (24th Jan 2022)
 Tweaks: Added more info on features available in pro license.
 

@@ -14,7 +14,7 @@ function em_install() {
 		add_action ( 'admin_notices', 'em_update_required_notification' );
 		return;
    	}
-	if( EM_VERSION > $old_version || $old_version == '' || (is_multisite() && !EM_MS_GLOBAL && get_option('em_ms_global_install')) ){
+	if( version_compare(EM_VERSION, $old_version, '>') || $old_version == '' || (is_multisite() && !EM_MS_GLOBAL && get_option('em_ms_global_install')) ){
 		if( get_option('dbem_upgrade_throttle') <= time() || !get_option('dbem_upgrade_throttle') ){
 		 	// Creates the events table if necessary
 		 	if( !EM_MS_GLOBAL || (EM_MS_GLOBAL && is_main_site()) ){
@@ -282,7 +282,7 @@ function em_create_bookings_table() {
 		booking_spaces int(5) NOT NULL,
 		booking_comment text DEFAULT NULL,
 		booking_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-		booking_status bool NOT NULL DEFAULT 1,
+		booking_status int(2) NOT NULL DEFAULT 1,
  		booking_price decimal(14,4) unsigned NOT NULL DEFAULT 0,
  		booking_tax_rate decimal(7,4) NULL DEFAULT NULL,
  		booking_taxes decimal(14,4) NULL DEFAULT NULL,
@@ -395,6 +395,7 @@ function em_add_options() {
 		'dbem_time_format' => get_option('time_format'),
 		'dbem_date_format' => get_option('date_format'),
 		'dbem_date_format_js' => 'dd/mm/yy',
+		'dbem_datepicker_format' => 'Y-m-d',
 		'dbem_dates_separator' => ' - ',
 		'dbem_times_separator' => ' - ',
 		//defaults
@@ -422,9 +423,15 @@ function em_add_options() {
 		'dbem_search_form_dates' => 1,
 		'dbem_search_form_dates_label' => __('Dates','events-manager'),
 		'dbem_search_form_dates_separator' => __('and','events-manager'),
+		'dbem_search_form_dates_format' => 'M j',
 		'dbem_search_form_categories' => 1,
 		'dbem_search_form_categories_label' => __('All Categories','events-manager'),
-		'dbem_search_form_category_label' => __('Category','events-manager'),
+		'dbem_search_form_category_label' => __('Categories','events-manager'),
+		'dbem_search_form_categories_placeholder' => sprintf(__( 'Search %s...', 'events-manager'),__('Categories','events-manager')),
+		'dbem_search_form_tags' => 1,
+		'dbem_search_form_tags_label' => __('All Tags','events-manager'),
+		'dbem_search_form_tag_label' => __('Tags','events-manager'),
+		'dbem_search_form_tags_placeholder' => sprintf(__( 'Search %s...', 'events-manager'),__('Tags','events-manager')),
 		'dbem_search_form_countries' => 1,
 		'dbem_search_form_default_country' => get_option('dbem_location_default_country',''),
 		'dbem_search_form_countries_label' => __('All Countries','events-manager'),
@@ -467,52 +474,16 @@ function em_add_options() {
 		'dbem_events_page_title' => __('Events','events-manager'),
 		'dbem_events_page_scope' => 'future',
 		'dbem_events_page_search_form' => 1,
-		'dbem_event_list_item_format_header' => '<table class="events-table" >
-    <thead>
-        <tr>
-			<th class="event-time" scope="col">'.__('Date/Time','events-manager').'</th>
-			<th class="event-description" scope="col">'.__('Event','events-manager').'</th>
-		</tr>
-   	</thead>
-    <tbody>',
-		'dbem_event_list_item_format' => '<tr>
-			<td>
-                #_EVENTDATES<br/>
-                #_EVENTTIMES
-            </td>
-            <td>
-                #_EVENTLINK
-                {has_location}<br/><i>#_LOCATIONNAME, #_LOCATIONTOWN #_LOCATIONSTATE</i>{/has_location}
-            </td>
-        </tr>',
-		'dbem_event_list_item_format_footer' => '</tbody></table>',
+		'dbem_event_list_item_format_header' => EM_Formats::dbem_event_list_item_format_header(''),
+		'dbem_event_list_item_format' => EM_Formats::dbem_event_list_item_format(''),
+		'dbem_event_list_item_format_footer' => EM_Formats::dbem_event_list_item_format_footer(''),
 		'dbem_event_list_groupby' => 0,
 		'dbem_event_list_groupby_format' => '',
 		'dbem_event_list_groupby_header_format' => '<h2>#s</h2>',
 		'dbem_display_calendar_in_events_page' => 0,
-		'dbem_single_event_format' => '<div style="float:right; margin:0px 0px 15px 15px;">#_LOCATIONMAP</div>
-<p>
-	<strong>'.esc_html__('Date/Time','events-manager').'</strong><br/>
-	Date(s) - #_EVENTDATES<br /><i>#_EVENTTIMES</i>
-</p>
-{has_location}
-<p>
-	<strong>'.esc_html__('Location','events-manager').'</strong><br/>
-	#_LOCATIONLINK
-</p>
-{/has_location}
-<p>
-	<strong>'.esc_html__('Categories','events-manager').'</strong>
-	#_CATEGORIES
-</p>
-<br style="clear:both" />
-#_EVENTNOTES
-{has_bookings}
-<h3>'.esc_html__('Bookings','events-manager').'</h3>
-#_BOOKINGFORM
-{/has_bookings}',
-	    'dbem_event_excerpt_format' => '#_EVENTDATES @ #_EVENTTIMES - #_EVENTEXCERPT',
-	    'dbem_event_excerpt_alt_format' => '#_EVENTDATES @ #_EVENTTIMES - #_EVENTEXCERPT{55}',
+		'dbem_single_event_format' => EM_Formats::dbem_single_event_format(''),
+	    'dbem_event_excerpt_format' => EM_Formats::dbem_event_excerpt_format(''),
+	    'dbem_event_excerpt_alt_format' => EM_Formats::dbem_event_excerpt_alt_format(''),
 		'dbem_event_page_title_format' => '#_EVENTNAME',
 		'dbem_event_all_day_message' => __('All Day','events-manager'),
 		'dbem_no_events_message' => sprintf(__( 'No %s', 'events-manager'),__('Events','events-manager')),
@@ -524,31 +495,17 @@ function em_add_options() {
 		'dbem_locations_page_search_form' => 1,
 		'dbem_no_locations_message' => sprintf(__( 'No %s', 'events-manager'),__('Locations','events-manager')),
 		'dbem_location_default_country' => '',
-		'dbem_location_list_item_format_header' => '<ul class="em-locations-list">',
-		'dbem_location_list_item_format' => '<li>#_LOCATIONLINK<ul><li>#_LOCATIONFULLLINE</li></ul></li>',
-		'dbem_location_list_item_format_footer' => '</ul>',
+		'dbem_location_list_item_format_header' => EM_Formats::dbem_location_list_item_format_header(''),
+		'dbem_location_list_item_format' => EM_Formats::dbem_location_list_item_format(''),
+		'dbem_location_list_item_format_footer' => EM_Formats::dbem_location_list_item_format_footer(''),
 		'dbem_location_page_title_format' => '#_LOCATIONNAME',
-		'dbem_single_location_format' => '<div style="float:right; margin:0px 0px 15px 15px;">#_LOCATIONMAP</div>
-<p>
-	<strong>'.__('Address','events-manager').'</strong><br/>
-	#_LOCATIONADDRESS<br/>
-	#_LOCATIONTOWN<br/>
-	#_LOCATIONSTATE<br/>
-	#_LOCATIONREGION<br/>
-	#_LOCATIONPOSTCODE<br/>
-	#_LOCATIONCOUNTRY
-</p>
-<br style="clear:both" />
-#_LOCATIONNOTES
-
-<h3>'.__('Upcoming Events','events-manager').'</h3>
-<p>#_LOCATIONNEXTEVENTS</p>',
-	    'dbem_location_excerpt_format' => '#_LOCATIONEXCERPT',
-	    'dbem_location_excerpt_alt_format' => '#_LOCATIONEXCERPT{55}',
-		'dbem_location_no_events_message' => '<li>'.__('No events in this location', 'events-manager').'</li>',
-		'dbem_location_event_list_item_header_format' => "<ul>",
-		'dbem_location_event_list_item_format' => "<li>#_EVENTLINK - #_EVENTDATES - #_EVENTTIMES</li>",
-		'dbem_location_event_list_item_footer_format' => "</ul>",
+		'dbem_single_location_format' => EM_Formats::dbem_single_location_format(''),
+	    'dbem_location_excerpt_format' => EM_Formats::dbem_location_excerpt_format(''),
+	    'dbem_location_excerpt_alt_format' => EM_Formats::dbem_location_excerpt_alt_format(''),
+		'dbem_location_no_events_message' => __('No events in this location', 'events-manager'),
+		'dbem_location_event_list_item_header_format' => EM_Formats::dbem_location_event_list_item_header_format(''),
+		'dbem_location_event_list_item_format' => EM_Formats::dbem_location_event_list_item_format(''),
+		'dbem_location_event_list_item_footer_format' => EM_Formats::dbem_location_event_list_item_footer_format(''),
 		'dbem_location_event_list_limit' => 20,
 		'dbem_location_event_list_orderby' => 'event_start_date,event_start_time,event_name',
 		'dbem_location_event_list_order' => 'ASC',
@@ -559,17 +516,17 @@ function em_add_options() {
 		'dbem_categories_default_orderby' => 'name',
 		'dbem_categories_default_order' =>  'ASC',
 		//Categories Page Formatting
-		'dbem_categories_list_item_format_header' => '<ul class="em-categories-list">',
-		'dbem_categories_list_item_format' => '<li>#_CATEGORYLINK</li>',
-		'dbem_categories_list_item_format_footer' => '</ul>',
+		'dbem_categories_list_item_format_header' => EM_Formats::dbem_categories_list_item_format_header(''),
+		'dbem_categories_list_item_format' => EM_Formats::dbem_categories_list_item_format(''),
+		'dbem_categories_list_item_format_footer' => EM_Formats::dbem_categories_list_item_format_footer(''),
 		'dbem_no_categories_message' =>  sprintf(__( 'No %s', 'events-manager'),__('Categories','events-manager')),
 		//Category Formatting
 		'dbem_category_page_title_format' => '#_CATEGORYNAME',
-		'dbem_category_page_format' => '#_CATEGORYNOTES<h3>'.__('Upcoming Events','events-manager').'</h3>#_CATEGORYNEXTEVENTS',
-		'dbem_category_no_events_message' => '<li>'.__('No events in this category', 'events-manager').'</li>',
-		'dbem_category_event_list_item_header_format' => '<ul>',
-		'dbem_category_event_list_item_format' => "<li>#_EVENTLINK - #_EVENTDATES - #_EVENTTIMES</li>",
-		'dbem_category_event_list_item_footer_format' => '</ul>',
+		'dbem_category_page_format' => EM_Formats::dbem_category_page_format(''),
+		'dbem_category_no_events_message' =>  __('No events in this category', 'events-manager'),
+		'dbem_category_event_list_item_header_format' => EM_Formats::dbem_category_event_list_item_header_format(''),
+		'dbem_category_event_list_item_format' => EM_Formats::dbem_category_event_list_item_format(''),
+		'dbem_category_event_list_item_footer_format' => EM_Formats::dbem_category_event_list_item_footer_format(''),
 		'dbem_category_event_list_limit' => 20,
 		'dbem_category_event_list_orderby' => 'event_start_date,event_start_time,event_name',
 		'dbem_category_event_list_order' => 'ASC',
@@ -580,18 +537,20 @@ function em_add_options() {
 		'dbem_tags_default_limit' => 10,
 		'dbem_tags_default_orderby' => 'name',
 		'dbem_tags_default_order' =>  'ASC',
+		
 		//Tags Page Formatting
-		'dbem_tags_list_item_format_header' => '<ul class="em-tags-list">',
-		'dbem_tags_list_item_format' => '<li>#_TAGLINK</li>',
-		'dbem_tags_list_item_format_footer' => '</ul>',
+		'dbem_tags_list_item_format_header' => EM_Formats::dbem_tags_list_item_format_header(''),
+		'dbem_tags_list_item_format' => EM_Formats::dbem_tags_list_item_format(''),
+		'dbem_tags_list_item_format_footer' => EM_Formats::dbem_tags_list_item_format_footer(''),
 		'dbem_no_tags_message' =>  sprintf(__( 'No %s', 'events-manager'),__('Tags','events-manager')),
 		//Tag Page Formatting
 		'dbem_tag_page_title_format' => '#_TAGNAME',
-		'dbem_tag_page_format' => '<h3>'.__('Upcoming Events','events-manager').'</h3>#_TAGNEXTEVENTS',
-		'dbem_tag_no_events_message' => '<li>'.__('No events with this tag', 'events-manager').'</li>',
-		'dbem_tag_event_list_item_header_format' => '<ul class="em-tags-list">',
-		'dbem_tag_event_list_item_format' => "<li>#_EVENTLINK - #_EVENTDATES - #_EVENTTIMES</li>",
-		'dbem_tag_event_list_item_footer_format' => '</ul>',
+		'dbem_tag_page_format' => EM_Formats::dbem_tag_page_format(''),
+		'dbem_tag_no_events_message' => __('No events with this tag', 'events-manager'),
+		'dbem_tag_event_list_item_header_format' => EM_Formats::dbem_tag_event_list_item_header_format(''),
+		'dbem_tag_event_list_item_format' => EM_Formats::dbem_tag_event_list_item_format(''),
+		'dbem_tag_event_list_item_footer_format' => EM_Formats::dbem_tag_event_list_item_footer_format(''),
+		
 		'dbem_tag_event_single_format' => '#_EVENTLINK - #_EVENTDATES - #_EVENTTIMES',
 		'dbem_tag_no_event_message' => __('No events with this tag', 'events-manager'),
 		'dbem_tag_event_list_limit' => 20,
@@ -619,8 +578,8 @@ function em_add_options() {
 		'dbem_google_maps_browser_key'=> '',
 		'dbem_map_default_width'=> '400px', //eventually will use %
 		'dbem_map_default_height'=> '300px',
-		'dbem_location_baloon_format' => '<strong>#_LOCATIONNAME</strong><br/>#_LOCATIONADDRESS - #_LOCATIONTOWN<br/><a href="#_LOCATIONPAGEURL">'.__('Events', 'events-manager').'</a>',
-		'dbem_map_text_format' => '<strong>#_LOCATIONNAME</strong><p>#_LOCATIONADDRESS</p><p>#_LOCATIONTOWN</p>',
+		'dbem_location_baloon_format' => EM_Formats::dbem_location_baloon_format(''),
+		'dbem_map_text_format' => EM_Formats::dbem_map_text_format(''),
 		//Email Config
 		'dbem_email_disable_registration' => 0,
 		'dbem_rsvp_mail_port' => 465,
@@ -641,14 +600,10 @@ function em_add_options() {
 		//Calendar Options
 		'dbem_list_date_title' => __('Events', 'events-manager').' - #j #M #y',
 		'dbem_full_calendar_month_format' => 'M Y',
-		'dbem_full_calendar_event_format' => '<li>#_EVENTLINK</li>',
 		'dbem_full_calendar_long_events' => '0',
 		'dbem_full_calendar_initials_length' => 0,
 		'dbem_full_calendar_abbreviated_weekdays' => true,
 		'dbem_display_calendar_day_single_yes' => 1,
-		'dbem_small_calendar_month_format' => 'M Y',
-		'dbem_small_calendar_event_title_format' => "#_EVENTNAME",
-		'dbem_small_calendar_event_title_separator' => ", ",
 		'dbem_small_calendar_initials_length' => 1,
 		'dbem_small_calendar_abbreviated_weekdays' => false,
 		'dbem_small_calendar_long_events' => '0',
@@ -657,6 +612,12 @@ function em_add_options() {
 		'dbem_display_calendar_events_limit' => get_option('dbem_full_calendar_events_limit',3),
 		'dbem_display_calendar_events_limit_msg' => __('more...','events-manager'),
 		'dbem_calendar_direct_links' => 1,
+		'dbem_calendar_preview_mode' => 'modal',
+		'dbem_calendar_preview_mode_date' => 'modal',
+		'dbem_calendar_preview_modal_date_format' => EM_Formats::dbem_calendar_preview_modal_date_format(''),
+		'dbem_calendar_preview_modal_event_format' => EM_Formats::dbem_calendar_preview_modal_event_format(''),
+		'dbem_calendar_preview_tooltip_event_format' => EM_Formats::dbem_calendar_preview_tooltip_event_format(''),
+		'dbem_calendar_large_pill_format' => '#_12HSTARTTIME - #_EVENTLINK',
 		//General Settings
 		'dbem_timezone_enabled' => 1,
 		'dbem_timezone_default' => EM_DateTimeZone::create()->getName(),
@@ -764,6 +725,13 @@ function em_add_options() {
 		'dbem_bp_events_list_format_footer' => '</ul>',
 		'dbem_bp_events_list_none_format' => '<p class="em-events-list">'.__('No Events','events-manager').'</p>',
 		//custom CSS options for public pages
+		'dbem_css' => 1,
+		'dbem_css_theme' => 1,
+		'dbem_css_theme_font_family' => 0,
+		'dbem_css_theme_font_size' => 0,
+		'dbem_css_theme_font_weight' => 0,
+		'dbem_css_theme_line_height' => 0,
+		'dbem_css_calendar' => 1,
 		'dbem_css_editors' => 1,
 		'dbem_css_rsvp' => 1, //my bookings page
 		'dbem_css_rsvpadmin' => 1, //my event bookings page
@@ -772,6 +740,11 @@ function em_add_options() {
 		'dbem_css_loclist' => 1,
 		'dbem_css_catlist' => 1,
 		'dbem_css_taglist' => 1,
+		'dbem_css_events' => 1,
+		'dbem_css_locations' => 1,
+		'dbem_css_categories' => 1,
+		'dbem_css_tags' => 1,
+		'dbem_css_myrsvp' => 1,
 		/*
 		 * Custom Post Options - set up to mimick old EM settings and install with minimal setup for most users
 		 */
@@ -822,7 +795,7 @@ function em_add_options() {
 	    //feedback reminder
 	    'dbem_feedback_reminder' => time(),
 	    'dbem_events_page_ajax' => 0,
-	    'dbem_conditional_recursions' => 1,
+	    'dbem_conditional_recursions' => 2,
         //data privacy/protection
         'dbem_data_privacy_consent_text' => esc_html__('I consent to my submitted data being collected and stored as outlined by the site %s.','events-manager'),
         'dbem_data_privacy_consent_remember' => 1,
@@ -834,7 +807,8 @@ function em_add_options() {
 		'dbem_data_privacy_export_bookings' => 1,
 		'dbem_data_privacy_erase_events' => 1,
 		'dbem_data_privacy_erase_locations' => 1,
-		'dbem_data_privacy_erase_bookings' => 1
+		'dbem_data_privacy_erase_bookings' => 1,
+		'dbem_advanced_formatting' => 0,
 	);
 	
 	//do date js according to locale:
@@ -872,9 +846,9 @@ function em_upgrade_current_installation(){
 		EM_Admin_Notices::add($EM_Admin_Notice, is_multisite());
 	}
 	
-	
-	if( !get_option('dbem_version') ){ add_option('dbem_credits',1); }
-	if( get_option('dbem_version') != '' && get_option('dbem_version') < 5 ){
+	$current_version = get_option('dbem_version');
+	if( !$current_version ){ add_option('dbem_credits',1); }
+	if( $current_version != '' && $current_version < 5 ){
 		//make events, cats and locs pages
 		update_option('dbem_cp_events_template_page',1);
 		update_option('dbem_cp_locations_template_page',1);
@@ -887,7 +861,7 @@ function em_upgrade_current_installation(){
 				$orderby[] = 'event_'.$val;
 			}
 		}
-		$orderby = (count($orderby) > 0) ? implode(',',$orderby):$dbem_options['dbem_events_default_orderby'];
+		$orderby = (count($orderby) > 0) ? implode(',',$orderby): get_option('dbem_events_default_orderby');
 		update_option('dbem_events_default_orderby',$orderby);
 		//Locations and categories weren't controlled in v4, so just reset them
 		update_option('dbem_locations_default_orderby','location_name');
@@ -900,16 +874,16 @@ function em_upgrade_current_installation(){
 		if( defined('EM_LOCATIONS_SLUG') && EM_LOCATIONS_SLUG != 'locations' ) update_option('dbem_cp_locations_slug', EM_LOCATIONS_SLUG);
 		if( defined('EM_CATEGORIES_SLUG') && EM_CATEGORIES_SLUG != 'categories' ) update_option('dbem_taxonomy_category_slug', $events_page->post_name.'/'.EM_CATEGORIES_SLUG);
 	}
-	if( get_option('dbem_version') != '' && get_option('dbem_version') < 5.19 ){
+	if( $current_version != '' && $current_version < 5.19 ){
 		update_option('dbem_event_reapproved_email_subject',  get_option('dbem_event_approved_email_subject'));
 		update_option('dbem_event_reapproved_email_body', get_option('dbem_event_approved_email_body'));
 	}
-	if( get_option('dbem_version') != '' && get_option('dbem_version') <= 5.21 ){
+	if( $current_version != '' && $current_version <= 5.21 ){
 		//just remove all rsvp cut-off info
 		$wpdb->query("UPDATE ".$wpdb->postmeta." SET meta_value = NULL WHERE meta_key IN ('_event_rsvp_date','_event_rsvp_time') AND post_id IN (SELECT post_id FROM ".EM_EVENTS_TABLE." WHERE recurrence_id > 0)");
 		$wpdb->query("UPDATE ".EM_EVENTS_TABLE." SET event_rsvp_time = NULL, event_rsvp_date = NULL WHERE recurrence_id > 0");
 	}
-	if( get_option('dbem_version') != '' && get_option('dbem_version') < 5.364 ){
+	if( $current_version != '' && $current_version < 5.364 ){
 		if( get_option('dbem_cp_events_template_page') ){
 			update_option('dbem_cp_events_template', 'page');
 			delete_option('dbem_cp_events_template_page');
@@ -927,7 +901,7 @@ function em_upgrade_current_installation(){
 		update_option('dbem_tag_event_single_format',get_option('dbem_tag_event_list_item_header_format').get_option('dbem_tag_event_list_item_format').get_option('dbem_tag_event_list_item_footer_format'));
 		update_option('dbem_tag_no_event_message',get_option('dbem_tag_event_list_item_header_format').get_option('dbem_tag_no_events_message').get_option('dbem_tag_event_list_item_footer_format'));
 	}
-	if( get_option('dbem_version') != '' && get_option('dbem_version') < 5.38 ){
+	if( $current_version != '' && $current_version < 5.38 ){
 		update_option('dbem_dates_separator', get_option('dbem_dates_Seperator', get_option('dbem_dates_seperator',' - ')));
 		update_option('dbem_times_separator', get_option('dbem_times_Seperator', get_option('dbem_times_seperator',' - ')));
 		delete_option('dbem_dates_Seperator');
@@ -935,17 +909,17 @@ function em_upgrade_current_installation(){
 		delete_option('dbem_dates_seperator');
 		delete_option('dbem_times_seperator');
 	}
-	if( get_option('dbem_version') != '' && get_option('dbem_version') < 5.4 ){
+	if( $current_version != '' && $current_version < 5.4 ){
 		//tax rates now saved at booking level, so that alterations to tax rates don't change previous booking prices
 		//any past bookings that don't get updated will adhere to these two values when calculating prices
 		update_option('dbem_legacy_bookings_tax_auto_add', get_option('dbem_bookings_tax_auto_add'));
 		update_option('dbem_legacy_bookings_tax', get_option('dbem_bookings_tax'));
 	}
-	if( get_option('dbem_version') != '' && get_option('dbem_version') < 5.422 ){
+	if( $current_version != '' && $current_version < 5.422 ){
 		//copy registration email content into new setting
 		update_option('dbem_rss_limit',0);
 	}
-	if( get_option('dbem_version') != '' && get_option('dbem_version') < 5.4425 ){
+	if( $current_version != '' && $current_version < 5.4425 ){
 		//copy registration email content into new setting
 		update_option('dbem_css_editors',0);
 		update_option('dbem_css_rsvp',0);
@@ -963,7 +937,7 @@ function em_upgrade_current_installation(){
 		delete_option('dbem_events_page_search'); //avoids the double search form on overridden templates
 		update_option('dbem_locations_page_search_form',0); //upgrades shouldn't get extra surprises
 	}
-	if( get_option('dbem_version') != '' && get_option('dbem_version') < 5.512 ){
+	if( $current_version != '' && $current_version < 5.512 ){
 		update_option('dbem_search_form_geo_units',0); //don't display units search for previous installs
 		//correcting the typo
 		update_option('dbem_search_form_submit', get_option('dbem_serach_form_submit'));
@@ -977,11 +951,11 @@ function em_upgrade_current_installation(){
 			delete_option('dbem_serach_form_submit_ml'); //we can assume this isn't used in templates
 		}
 	}
-	if( get_option('dbem_version') != '' && get_option('dbem_version') < 5.54 ){
+	if( $current_version != '' && $current_version < 5.54 ){
 		update_option('dbem_cp_events_excerpt_formats',0); //don't override excerpts in previous installs
 		update_option('dbem_cp_locations_excerpt_formats',0);
 	}
-	if( get_option('dbem_version') != '' && get_option('dbem_version') < 5.55 ){
+	if( $current_version != '' && $current_version < 5.55 ){
 		//rename email templates sent to admins on new bookings
 		update_option('dbem_bookings_contact_email_cancelled_subject',get_option('dbem_contactperson_email_cancelled_subject'));
 		update_option('dbem_bookings_contact_email_cancelled_body',get_option('dbem_contactperson_email_cancelled_body'));
@@ -999,12 +973,12 @@ function em_upgrade_current_installation(){
 		delete_option('dbem_bookings_contact_email_subject');
 		delete_option('dbem_bookings_contact_email_body');
 	}
-	if( get_option('dbem_version') != '' && get_option('dbem_version') < 5.62 ){
+	if( $current_version != '' && $current_version < 5.62 ){
 		//delete all _event_created_date and _event_date_modified records in post_meta, we don't need them anymore, they were never accurate to begin with, refer to the records in em_events table if still needed
 		$wpdb->query('DELETE FROM '.$wpdb->postmeta." WHERE (meta_key='_event_date_created' OR meta_key='_event_date_modified') AND post_id IN (SELECT ID FROM ".$wpdb->posts." WHERE post_type='".EM_POST_TYPE_EVENT."' OR post_type='event-recurring')");
 		$wpdb->query('ALTER TABLE '. $wpdb->prefix.'em_bookings CHANGE event_id event_id BIGINT(20) UNSIGNED NULL');
 	}
-	if( get_option('dbem_version') != '' && get_option('dbem_version') < 5.66 ){
+	if( $current_version != '' && $current_version < 5.66 ){
 		if( get_option('dbem_ical_description_format') == "#_EVENTNAME - #_LOCATIONNAME - #_EVENTDATES - #_EVENTTIMES" ) update_option('dbem_ical_description_format',"#_EVENTNAME");
 		if( get_option('dbem_ical_location_format') == "#_LOCATION" ) update_option('dbem_ical_location_format', "#_LOCATIONNAME, #_LOCATIONFULLLINE, #_LOCATIONCOUNTRY");
 		$old_values = array(
@@ -1012,7 +986,7 @@ function em_upgrade_current_installation(){
 				'dbem_ical_location_format' => "#_LOCATION",
 		);
 	}
-	if( get_option('dbem_version') != '' && get_option('dbem_version') < 5.6636 ){
+	if( $current_version != '' && $current_version < 5.6636 ){
 		$sql = $wpdb->prepare("DELETE FROM {$wpdb->postmeta} WHERE meta_key='_post_id' AND post_id IN (SELECT ID FROM {$wpdb->posts} WHERE post_type=%s OR post_type=%s)", array(EM_POST_TYPE_EVENT, 'event-recurring'));
 		$wpdb->query($sql);
 		remove_filter('pre_option_dbem_bookings_registration_user', 'EM_People::dbem_bookings_registration_user');
@@ -1025,7 +999,7 @@ function em_upgrade_current_installation(){
 			delete_option('dbem_bookings_registration_user');
 		}
 	}
-	if( get_option('dbem_version') != '' && get_option('dbem_version') < 5.821 ){
+	if( $current_version != '' && $current_version < 5.821 ){
 		$admin_data = get_option('dbem_data');
 		//upgrade tables only if we didn't do it before during earlier dev versions
 		if( empty($admin_data['datetime_backcompat']) ){
@@ -1072,7 +1046,7 @@ function em_upgrade_current_installation(){
 			EM_Admin_Notices::add($EM_Admin_Notice, is_multisite());
 		}
 	}
-	if( get_option('dbem_version') != '' && get_option('dbem_version') == 5.9 && is_multisite() && !EM_MS_GLOBAL && (is_network_admin() || is_main_site()) ){
+	if( $current_version != '' && $current_version == 5.9 && is_multisite() && !EM_MS_GLOBAL && (is_network_admin() || is_main_site()) ){
 		//warning just for users who upgraded to 5.9 on multisite without global tables enabled
 		$message = 'Due to a bug in 5.9 when updating to new timezones in MultiSite installations, you may notice some of your events are missing from lists.<br><br>To fix this problem, visit %s choose your timezone, select %s and click %s to update all your blogs to the desired timezone.';
 		$url = network_admin_url('admin.php?page=events-manager-options#general+admin-tools');
@@ -1087,20 +1061,20 @@ function em_upgrade_current_installation(){
 		));
 		EM_Admin_Notices::add($EM_Admin_Notice, is_multisite());
 	}
-	if( get_option('dbem_version') != '' && get_option('dbem_version') < 5.93 ){
+	if( $current_version != '' && $current_version < 5.93 ){
 		$message = __('Events Manager has introduced new privacy tools to help you comply with international laws such as the GDPR, <a href="%s">see our documentation</a> for more information.','events-manager');
 		$message = sprintf( $message, 'https://wp-events-plugin.com/documentation/data-privacy-gdpr-compliance/?utm_source=plugin&utm_campaign=gdpr_update');
 		$EM_Admin_Notice = new EM_Admin_Notice(array( 'name' => 'gdpr_update', 'who' => 'admin', 'where' => 'all', 'message' => $message ));
 		EM_Admin_Notices::add($EM_Admin_Notice, is_multisite());
 	}
-	if( get_option('dbem_version') != '' && get_option('dbem_version') < 5.95 ){
+	if( $current_version != '' && $current_version < 5.95 ){
 		$message = esc_html__('Google has introduced new pricing for displaying maps on your site. If you have moderate traffic levels, this may likely affect you with surprise and unexpected costs!', 'events-manager');
 		$message2 = esc_html__('Events Manager has implemented multiple ways to help prevent or reduce these costs drastically, please check our %s page for more information.', 'events-manager');
 		$message2 = sprintf($message2, '<a href="https://wp-events-plugin.com/documentation/google-maps/api-usage/?utm_source=plugin&utm_source=medium=settings&utm_campaign=gmaps-update">'.esc_html__('documentation', 'events-manager') .'</a>');
 		$EM_Admin_Notice = new EM_Admin_Notice(array( 'name' => 'gdpr_update', 'who' => 'admin', 'where' => 'all', 'message' => "<p>$message</p><p>$message2</p>" ));
 		EM_Admin_Notices::add($EM_Admin_Notice, is_multisite());
 	}
-	if( get_option('dbem_version') != '' && get_option('dbem_version') < 5.9618 ){
+	if( $current_version != '' && $current_version < 5.9618 ){
 		$multisite_cond = '';
 		if( EM_MS_GLOBAL ){
 			if( is_main_site() ){
@@ -1119,14 +1093,14 @@ function em_upgrade_current_installation(){
 			update_option('dbem_smtp_encryption', 0);
 		}
 	}
-	if( get_option('dbem_version') != '' && get_option('dbem_version') < 5.975 ){
+	if( $current_version != '' && $current_version < 5.975 ){
 		update_option('dbem_location_types', array('location'=>1));
 		$message = esc_html__('Events Manager has introduced location types, which can include online locations such as a URL or integrations with webinar platforms such as Zoom! Enable different location types in your settings page, for more information see our %s.', 'events-manager');
 		$message = sprintf( $message, '<a href="http://wp-events-plugin.com/documentation/location-types/" target="_blank">'. esc_html__('documentation', 'events-manager')).'</a>';
 		$EM_Admin_Notice = new EM_Admin_Notice(array( 'name' => 'location-types-update', 'who' => 'admin', 'where' => 'all', 'message' => "$message" ));
 		EM_Admin_Notices::add($EM_Admin_Notice, is_multisite());
 	}
-	if( get_option('dbem_version') != '' && get_option('dbem_version') < 5.9821 ){
+	if( $current_version != '' && $current_version < 5.9821 ){
 		// recreate all event_parent records in post meta
 		$sql = "DELETE FROM {$wpdb->postmeta} WHERE meta_key = '_event_parent' AND post_id IN (SELECT post_id FROM ".EM_EVENTS_TABLE.")";
 		$wpdb->query($sql);
@@ -1140,6 +1114,59 @@ function em_upgrade_current_installation(){
 			}
 		}
 		$wpdb->query($sql);
+	}
+	// last version check in numbers, 6 onwwards uses version_compare
+	if( $current_version != '' && version_compare($current_version, '6.0', '<') ){
+		// convert jQuery UI DateFormat for max back-compat
+		$dateformat = get_option('dbem_date_format_js');
+		// check if there's any kind of non-convertable placeholders
+		$non_convertables = '(o|oo|!|TICKS)';
+		if( !preg_match("/$non_convertables/", $dateformat) ){
+			$placeholder_convertables = array('ATOM' => 'yy-mm-dd', 'COOKIE' => 'D, dd M yy', 'ISO_8601' => 'yy-mm-dd', 'RFC_822' => 'D, d M y', 'RFC_850' => 'DD, dd-M-y', 'RFC_1036' => 'D, d M y', 'RFC_1123' => 'D, d M yy', 'RFC_2822' => 'D, d M yy', 'RSS' => 'D, d M y', 'TIMESTAMP' => '@', 'W3C' => 'yy-mm-dd',);
+			foreach( $placeholder_convertables as $k => $v ){
+				$dateformat = str_replace($k, $v, $dateformat);
+			}
+			$convertable = array( 'dd' => 'XzX' /* d */, 'd' => 'j', 'XzX' => 'd', 'DD' => 'l', 'mm' => 'ZxZ' /* m */, 'm' => 'n', 'ZxZ' => 'm', 'MM' => 'F', 'yy' => 'Y', '@' => 'U' );
+			foreach( $convertable as $k => $v ){
+				$dateformat = str_replace($k, $v, $dateformat);
+			}
+			update_option('dbem_datepicker_format', $dateformat);
+		}
+		update_option('dbem_search_form_tags', 0); // disable tags searching by default for previous users
+		// it'd be nice to do 2 sweeps for our new templates, so we'll up the recursions to 2 so we can nest once, it'll also cover most use cases
+		if( get_option('dbem_conditional_recursions') <= 1 ){
+			update_option('dbem_conditional_recursions', 2);
+		}
+		// admin optiosn for upgrade/migration
+		$admin_data = get_option('dbem_data', array());
+		$admin_data['v6'] = false;
+		update_option('dbem_data', $admin_data);
+		// notify user of new update
+		$message = esc_html__('Welcome to Events Manager v6! This latest update includes some major UI improvements, which requires you to update your formats.', 'events-manager');
+		$settings_page_url = '<a href="'.admin_url('admin.php?page=events-manager-options').'">'. esc_html__('settings page', 'events-manager-google').'</a>';
+		$message2 = sprintf(esc_html__('Please visit the %s to see migration options.', 'events-manager'), $settings_page_url);
+		$EM_Admin_Notice = new EM_Admin_Notice(array( 'name' => 'v6-update', 'who' => 'admin', 'where' => 'all', 'message' => "$message $message2" ));
+		EM_Admin_Notices::add($EM_Admin_Notice, is_multisite());
+	}
+	if( $current_version != '' && version_compare($current_version, '6.0', '>=') && version_compare($current_version, '6.0.1.1', '<') ){
+		$admin_data = get_option('dbem_data', array());
+		$admin_data['v6'] = false;
+		update_option('dbem_data', $admin_data);
+		// notify user of new update
+		$message = "<strong>We've made some changes to our template files since the 6.0 update which may break your currently saved formats. We're re-enabling preview/migration for you on the %s to have the chance to preview and reload our newly updated templates. Sorry for the inconvenience!</strong>";
+		$settings_page_url = '<a href="'.admin_url('admin.php?page=events-manager-options').'">'. esc_html__('settings page', 'events-manager-google').'</a>';
+		$message = sprintf($message, $settings_page_url);
+		$message .= '</p><p>'."We've also added some extra features to help transition, which can be found in <code>Settings > General > Styling Options</code> and a new Default/Advanced mode in <code>Settings > Formatting</code> which will allow your formats to automatically update themselves directly from our plugin rather than settings page.";
+		$EM_Admin_Notice = new EM_Admin_Notice(array( 'name' => 'v6-update2', 'who' => 'admin', 'where' => 'all', 'message' => $message, 'what'=>'warning' ));
+		EM_Admin_Notices::add($EM_Admin_Notice, is_multisite());
+	}
+	if( $current_version != '' && version_compare($current_version, '6.0.1.1', '<') ){
+		// enable advanced formatting for any previous users, looks like before, they can disable afterwards.
+		update_option('dbem_advanced_formatting', 2);
+		update_option('dbem_css_theme_font_weight', 1);
+		update_option('dbem_css_theme_font_family', 1);
+		update_option('dbem_css_theme_font_size', 1);
+		update_option('dbem_css_theme_line_height', 1);
 	}
 }
 
