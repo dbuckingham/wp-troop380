@@ -166,7 +166,8 @@ $notes = $entry->getNotes();
 	);
 	
 	if ( ! empty( $merit_badges_group ) ) {
-		echo '<span class="cn-merit-badge-label">Merit Badges: </span>';
+		echo '<span class="cn-merit-badge-label">Merit Badges</span>';
+		echo '<span class="cn-separator">: </span>';
 	
 		$merit_badge_count = 0;
 		foreach ( $merit_badges_group as $option ) {
