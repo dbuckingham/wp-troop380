@@ -70,7 +70,7 @@ $reschedule_warnings = !empty($EM_Event->event_id) && $EM_Event->is_recurring() 
 				<tfoot>
 					<tr valign="top">
 						<td colspan="7">
-							<a href="#" id="em-tickets-add"><?php esc_html_e('Add new ticket','events-manager'); ?></a>
+							<a href="#" class="em-tickets-add button" id="em-tickets-add"><?php esc_html_e('Add new ticket','events-manager'); ?></a>
 						</td>
 					</tr>
 				</tfoot>
@@ -133,7 +133,7 @@ $reschedule_warnings = !empty($EM_Event->event_id) && $EM_Event->is_recurring() 
 								<td colspan="<?php echo apply_filters('em_event_edit_ticket_td_colspan', 7); ?>">
 									<?php include( em_locate_template('forms/event/bookings-ticket-form.php')); ?>
 									<div class="em-ticket-form-actions">
-									<button type="button" class="ticket-actions-edited"><?php esc_html_e('Close Ticket Editor','events-manager')?></button>
+									<button type="button" class="ticket-actions-edited button"><?php esc_html_e('Close Ticket Editor','events-manager')?></button>
 									</div>
 								</td>
 							</tr>
@@ -150,10 +150,10 @@ $reschedule_warnings = !empty($EM_Event->event_id) && $EM_Event->is_recurring() 
 		</div>
 		<?php if( $reschedule_warnings ): //If this event is a recurring template, we need to warn the user that editing tickets will delete previous bookings ?>
 		<div class="recurrence-reschedule-buttons">
-		    <a href="<?php echo esc_url(add_query_arg('recreate_tickets', null)); ?>" class="button-secondary em-button em-reschedule-cancel<?php if( empty($_REQUEST['recreate_tickets']) ) echo ' reschedule-hidden'; ?>" data-target=".em-tickets-form">
+		    <a href="<?php echo esc_url(add_query_arg('recreate_tickets', null)); ?>" class="button-secondary button em-reschedule-cancel<?php if( empty($_REQUEST['recreate_tickets']) ) echo ' reschedule-hidden'; ?>" data-target=".em-tickets-form">
 		    	<?php esc_html_e('Cancel Ticket Recreation', 'events-manager'); ?>
 		    </a>
-		    <a href="<?php echo esc_url(add_query_arg('recreate_tickets', '1')); ?>" class="em-reschedule-trigger em-button button-secondary<?php if( !empty($_REQUEST['recreate_tickets']) ) echo ' reschedule-hidden'; ?>" data-target=".em-tickets-form">
+		    <a href="<?php echo esc_url(add_query_arg('recreate_tickets', '1')); ?>" class="em-reschedule-trigger button button-secondary<?php if( !empty($_REQUEST['recreate_tickets']) ) echo ' reschedule-hidden'; ?>" data-target=".em-tickets-form">
 		    	<?php esc_html_e('Modify Recurring Event Tickets ', 'events-manager'); ?>
 		    </a>
 	    	<input type="hidden" name="event_recreate_tickets" class="em-reschedule-value" value="<?php echo empty($_REQUEST['recreate_tickets']) ? 0:1 ?>" />
@@ -175,22 +175,24 @@ $reschedule_warnings = !empty($EM_Event->event_id) && $EM_Event->is_recurring() 
 	</p>
 	<p>
 		<label><?php esc_html_e('Booking Cut-Off Date','events-manager'); ?></label>
-		<span class="em-booking-date-normal">
-			<span class="em-date-single">
-				<input id="em-bookings-date-loc" class="em-date-input-loc" type="text" />
-				<input id="em-bookings-date" class="em-date-input" type="hidden" name="event_rsvp_date" value="<?php echo $EM_Event->event_rsvp_date; ?>" />
+		<div class="inline-inputs">
+			<span class="em-booking-date-normal em-datepicker">
+				<input type="hidden" class="em-date-input em-date-input-start" aria-hidden="true" aria-label="<?php esc_html_e('Booking Cut-Off Date','events-manager'); ?>">
+				<span class="em-datepicker-data">
+					<input type="date" name="event_rsvp_date" value="<?php echo $EM_Event->event_rsvp_date; ?>">
+				</span>
 			</span>
-		</span>
-		<span class="em-booking-date-recurring">
-			<input type="text" name="recurrence_rsvp_days" size="3" value="<?php echo absint($EM_Event->recurrence_rsvp_days); ?>" />
-			<?php _e('day(s)','events-manager'); ?>
-			<select name="recurrence_rsvp_days_when">
-				<option value="before" <?php if( !empty($EM_Event->recurrence_rsvp_days) && $EM_Event->recurrence_rsvp_days <= 0) echo 'selected="selected"'; ?>><?php echo sprintf(_x('%s the event starts','before or after','events-manager'),__('Before','events-manager')); ?></option>
-				<option value="after" <?php if( !empty($EM_Event->recurrence_rsvp_days) && $EM_Event->recurrence_rsvp_days > 0) echo 'selected="selected"'; ?>><?php echo sprintf(_x('%s the event starts','before or after','events-manager'),__('After','events-manager')); ?></option>
-			</select>
-			<?php _e('at','events-manager'); ?>
-		</span>
-		<input type="text" name="event_rsvp_time" class="em-time-input" maxlength="8" size="8" value="<?php if (!empty($EM_Event->event_rsvp_time)) echo $EM_Event->rsvp_end()->format(em_get_hour_format()); ?>" />
+			<span class="em-booking-date-recurring">
+				<input type="text" name="recurrence_rsvp_days" size="3" value="<?php echo absint($EM_Event->recurrence_rsvp_days); ?>" />
+				<?php _e('day(s)','events-manager'); ?>
+				<select name="recurrence_rsvp_days_when">
+					<option value="before" <?php if( !empty($EM_Event->recurrence_rsvp_days) && $EM_Event->recurrence_rsvp_days <= 0) echo 'selected="selected"'; ?>><?php echo sprintf(_x('%s the event starts','before or after','events-manager'),__('Before','events-manager')); ?></option>
+					<option value="after" <?php if( !empty($EM_Event->recurrence_rsvp_days) && $EM_Event->recurrence_rsvp_days > 0) echo 'selected="selected"'; ?>><?php echo sprintf(_x('%s the event starts','before or after','events-manager'),__('After','events-manager')); ?></option>
+				</select>
+				<?php _e('at','events-manager'); ?>
+			</span>
+			<input type="text" name="event_rsvp_time" class="em-time-input" maxlength="8" size="8" value="<?php if (!empty($EM_Event->event_rsvp_time)) echo $EM_Event->rsvp_end()->format(em_get_hour_format()); ?>" />
+		</div>
 		<br />
 		<em><?php esc_html_e('This is the definite date after which bookings will be closed for this event, regardless of individual ticket settings above. Default value will be the event start date.','events-manager'); ?></em>
 	</p>

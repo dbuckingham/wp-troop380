@@ -3,12 +3,12 @@
  * Plugin Name: Views for Ninja Forms
  * Plugin URI: https://nfviews.com
  * Description: Display Ninja Forms Submissions in frontend.
- * Version: 2.6
+ * Version: 2.6.4
  * Author: WebHolics
  * Author URI: https://nfviews.com
  * Text Domain: views-for-ninja-forms
  *
- * Copyright 2021.
+ * Copyright 2022.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

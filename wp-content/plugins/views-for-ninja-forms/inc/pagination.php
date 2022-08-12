@@ -86,7 +86,7 @@ class View_Paginator {
 	 * @var numeric
 	 */
 	private function set_instance() {
-		$this->_page = (int) ( ! isset( $_GET[$this->_instance] ) ? 1 : $_GET[$this->_instance] );
+		$this->_page = (int) ( ! isset( $_GET[$this->_instance] ) ? 1 : (int)$_GET[$this->_instance] );
 		$this->_page = ( $this->_page == 0 ? 1 : ($this->_page < 0 ? 1 : $this->_page) );
 	}
 
@@ -143,7 +143,7 @@ class View_Paginator {
 		if ( $lastpage > 1 ) {
 			$pagination .= "<ul class='pagination " . $this->_customCSS . "'>";
 			if ( $this->_page > 1 ) {
-				$pagination .= "<li><a href='" . $path . "$this->_instance=$prev" . "$ext'>Previous</a></li>";
+				$pagination .= "<li><a href='" . $path . "$this->_instance=$prev" . "$ext'>". __( 'Previous', 'views-for-ninja-forms' ) . "</a></li>";
 			}else {
 				// $pagination.= "<span class='disabled'>Previous</span>";
 			}
@@ -196,7 +196,7 @@ class View_Paginator {
 			}
 
 			if ( $this->_page < $counter - 1 )
-				$pagination .= "<li><a href='" . $path . "$this->_instance=$next" . "$ext'>Next</a></li>";
+				$pagination .= "<li><a href='" . $path . "$this->_instance=$next" . "$ext'>". __( 'Next', 'views-for-ninja-forms' ) . "</a></li>";
 			else
 				// $pagination.= "<li><span class='disabled'>Next</span></li>";
 				$pagination .= "</ul>\n";

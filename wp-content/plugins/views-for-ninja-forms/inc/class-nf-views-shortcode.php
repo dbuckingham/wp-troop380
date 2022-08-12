@@ -4,6 +4,7 @@ class NF_Views_Shortcode {
 	public $submissions_count;
 	public $table_heading_added;
 	public $form_fields;
+		private $seq_no = 1;
 	function __construct() {
 		add_shortcode( 'nf-views', array( $this, 'shortcode' ), 10 );
 	}
@@ -58,6 +59,7 @@ class NF_Views_Shortcode {
 			$page_no = sanitize_text_field( $_GET['pagenum'] );
 			$offset = $per_page * ( $page_no-1 );
 			$args['offset'] = $offset;
+			$this->seq_no = $offset+1;
 		}
 
 		$submissions = nf_views_get_submissions( $args );
@@ -111,6 +113,7 @@ class NF_Views_Shortcode {
 				$content .= $this->get_table_row_html( $row_id, $view_settings, $sub );
 			}
 			$content .= '</tr>';
+			$this->seq_no++;
 
 		}
 		$content .= '</tbody></table></div>';
@@ -210,15 +213,15 @@ class NF_Views_Shortcode {
 						if ( $form_field_type == 'repeater' ) {
 							$field_value = NF_Views_Field_Values()->get_repeater_field_html( $form_field_id, $field_value, $sub );
 						}else {
-						if (  $form_field_type === 'date' ) {
-							$field_value = $this->date_field_display_value( $field_value, $form_field_id );
-						}else if( in_array( $form_field_type, array(  'liststate', 'listselect', 'listradio', 'listcheckbox' ) ) ) {
-							//	$field_value = isset( $this->form_fields->{$form_field_id}->values[$field_value] )? $this->form_fields->{$form_field_id}->values[$field_value] : '';
-							$field_value_labes_array=[];
-							foreach($field_value as $option_value) {
-								$field_value_labes_array[]= isset( $this->form_fields->{$form_field_id}->values[$option_value] )? $this->form_fields->{$form_field_id}->values[$option_value] : '';
-							}
-							$field_value = implode( ', ', $field_value_labes_array );
+							if (  $form_field_type === 'date' ) {
+								$field_value = $this->date_field_display_value( $field_value, $form_field_id );
+							}else if ( in_array( $form_field_type, array(  'liststate', 'listselect', 'listradio', 'listcheckbox' ) ) ) {
+								// $field_value = isset( $this->form_fields->{$form_field_id}->values[$field_value] )? $this->form_fields->{$form_field_id}->values[$field_value] : '';
+								$field_value_labes_array = [];
+								foreach ( $field_value as $option_value ) {
+									$field_value_labes_array[] = isset( $this->form_fields->{$form_field_id}->values[$option_value] )? $this->form_fields->{$form_field_id}->values[$option_value] : '';
+								}
+								$field_value = implode( ', ', $field_value_labes_array );
 							}else {
 								$field_value = implode( ', ', $field_value );
 							}
@@ -245,6 +248,10 @@ class NF_Views_Shortcode {
 			}else {
 				if ( $form_field_id == 'entryId' ) {
 					$field_value = $sub->ID;
+				}else if ( $form_field_id == 'sequenceNumber' ) {
+					$field_value = '<div class="nf-view-field-value nf-view-field-type-sequenceNumber-value">';
+					$field_value .= $this->seq_no;
+					$field_value .= '</div>';
 				}
 			}
 			$field_value = apply_filters( 'nfviews-field-value', $field_value, $view_settings, $sub );
@@ -323,7 +330,7 @@ class NF_Views_Shortcode {
 		}
 		return $field_html;
 	}
-		private function date_field_display_value( $field_value, $field_id ) {
+	private function date_field_display_value( $field_value, $field_id ) {
 		if ( ! is_array( $field_value ) ) {
 			return $field_value;
 		}

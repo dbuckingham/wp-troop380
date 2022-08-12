@@ -134,4 +134,68 @@ jQuery(document).ready(function($){
 	});
 	//color pickers
 	$('#dbem_category_default_color, #dbem_tag_default_color').wpColorPicker();
+
+	// reset admin setting via ajax
+	$('.em-option-resettable').on('click', function( e ){
+		e.preventDefault();
+	    let el = $(this);
+	    let name = el.attr('data-name');
+	    let inputs = el.closest('tr').find('input[name="'+name+'"], textarea[name="'+name+'"]');
+	    $.get({
+	        url : EM.ajaxurl,
+	        data : {
+	            action : 'em_admin_get_option_default',
+	            option_name : name,
+	            nonce : el.attr('data-nonce'),
+	        },
+            success : function(data){
+                inputs.val(data);
+                inputs.prop('disabled', false);
+                alert(EM.option_reset);
+            },
+            beforeSend: function(){
+                inputs.prop('disabled', true);
+            },
+            error : function(){
+                inputs.prop('disabled', false);
+                alert('Error - could not revert.');
+            },
+	        dataType: 'text',
+	    })
+	});
+
+    let status = $('#em-advanced-formatting');
+    let af_toggle_action = function(){
+        const am = status.val();
+        if( am == 0 ){
+            $('.am-af').hide();
+        }else if( am == 1 ){
+            $('.am-af').show();
+            $('.dbem_advanced_formatting_modes_row').show(); // show toggles
+            $('.dbem_advanced_formatting_modes .em-trigger:checked').trigger('change');
+        }else{
+            $('.am-af').show(); // show everything
+            $('.dbem_advanced_formatting_modes_row').hide(); // hide toggles
+        }
+        $('.em-af-toggle, .em-af-status span').hide();
+        $('.em-af-toggle.show-'+ am).show();
+        $('.em-af-status-'+ am).show();
+        if( $('.em-af-status').attr('data-status') != am ){
+            $('.em-af-status .em-af-status-save').show();
+        }else{
+            $('.em-af-status .em-af-status-save').hide();
+        }
+    };
+	$('.em-af-toggle').on('click', function(e){
+	    e.preventDefault();
+        status.val( this.getAttribute('data-set-status') );
+        af_toggle_action();
+	});
+	af_toggle_action();
+
+    if( typeof EM.admin === 'object' && 'settings' in EM.admin ){
+        tippy( $('.dbem_advanced_formatting_modes_row th').toArray(), {
+            content : EM.admin.settings.option_override_tooltip,
+        });
+    }
 });
