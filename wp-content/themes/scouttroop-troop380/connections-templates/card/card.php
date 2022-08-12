@@ -11,7 +11,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 use Connections_Directory\Utility\_escape;
 use Connections_Directory\Utility\_html;
 
-require_once dirname(__FILE__) . '/../../includes/class.merit-badge-fields.php';
+require_once dirname(__FILE__) . '/../../includes/class.merit-badge.php';
+Merit_Badge::__constructStatic();
 
 /**
  * @var array        $atts  The shortcode attributes arrays.
@@ -165,13 +166,22 @@ $notes = $entry->getNotes();
 	);
 	
 	if ( ! empty( $merit_badges_group ) ) {
-		echo '<span class="cn_merit_badge_label">Merit Badges: </span>';
+		echo '<span class="cn-merit-badge-label">Merit Badges: </span>';
 	
 		$merit_badge_count = 0;
 		foreach ( $merit_badges_group as $option ) {
-			$merit_badge = Merit_Badge_Fields::$fields[$option];
+			// $merit_badge = Merit_Badge_Fields::$fields[$option];
+			$merit_badge = Merit_Badge::$all[$option];
 			if( $merit_badge_count > 0 ) echo ', ';
-			printf( '%1$s', esc_html( $merit_badge ) );
+
+			if( $merit_badge->is_eagle_required )
+			{
+				printf( '<span class="cn-merit-badge-eagle-required">%1$s</span>', esc_html( $merit_badge->name ) );
+			}
+			else
+			{
+				printf( '%1$s', esc_html( $merit_badge->name ) );
+			}
 
 			$merit_badge_count++;
 		}
