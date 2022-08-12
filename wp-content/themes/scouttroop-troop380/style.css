@@ -4,9 +4,9 @@ Theme URI: https://github.com/dbuckingham/wp-troop380
 Author: David Buckingham
 Author URI: https://github.com/dbuckingham/wp-troop380
 Description: A theme to allow a Scout Troop an easy-to-manage website.  Official red and blue, and styling for almost any HTML markup.  The theme is responsive, so you will not need a mobile site, it will just render correctly.
-Version: 1.26
+Version: 1.0.0
 License: B.S.A. owns the copyright to some included images and has registered trademarks that are included.  The author of the theme gives permission to any Troop, Council, Charter Organization or District of Boy Scouts of America to use all other parts of the theme.
-Text Domain: scouttroop
+Text Domain: scouttroop-troop380
 Template: scouttroop
 
 
@@ -20,4 +20,9 @@ flexnav by Jason Weaver http://jasonweaver.name/lab/flexiblenavigation/
     padding-left: 10%;
     padding-right: 10%;
     text-align: center;
+}
+
+.cn-merit-badge-eagle-required {
+    color: #CE1126;
+    font-weight: bold;
 }
