@@ -31,7 +31,7 @@ class Merit_Badge {
             'chess'                         => new Merit_Badge( 'Chess' ),
             'citizenship-in-the-community'  => new Merit_Badge( 'Citizenship in the Community', true ),
             'citizenship-in-the-nation'     => new Merit_Badge( 'Citizenship in the Nation', true ),
-            'citizenship-in-society'        => new Merit_Badge( 'Citizenship in the Society', true ),
+            'citizenship-in-society'        => new Merit_Badge( 'Citizenship in Society', true ),
             'citizenship-in-the-world'      => new Merit_Badge( 'Citizenship in the World', true ),
             'climbing'                      => new Merit_Badge( 'Climbing' ),
             'coin-collecting'               => new Merit_Badge( 'Coin Collecting' ),
